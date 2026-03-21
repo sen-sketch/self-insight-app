@@ -42,11 +42,12 @@
 | name | text | Yes | タスク名 |
 | target_start_time | time | No | 目標開始時刻 |
 | is_active | boolean | Yes | 有効フラグ |
+| sort_order | integer | Yes | 同一ユーザー内の表示順 |
 | created_at | timestamptz | Yes | 作成日時 |
 | updated_at | timestamptz | Yes | 更新日時 |
 
 インデックス:
-- `(user_id, is_active, name)`
+- `(user_id, is_active, sort_order)`
 
 ## habit_start_logs
 | カラム名 | 型 | 必須 | 説明 |
@@ -111,6 +112,13 @@
 - 期間開始日時を固定し、4テーブルから `user_id + 日時` で取得
 - 各カテゴリ内では日時の降順で取得する
 - アプリ側でカテゴリごとに整形して1テキストに連結
+
+### 3.4 一覧取得順序
+- タイムライン投稿一覧は `posted_at DESC` で取得する。
+- 習慣タスク一覧は `is_active DESC, sort_order ASC` で取得する。
+- 習慣開始記録一覧は `started_at DESC` で取得する。
+- 運記録一覧は `recorded_at DESC` で取得する。
+- メタ認知日記一覧は `diary_date DESC` で取得する。
 
 ## 4. データ保持と削除
 - MVPは無期限保持
