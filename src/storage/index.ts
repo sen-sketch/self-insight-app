@@ -13,6 +13,13 @@ import type {
   UpdateLuckRecordInput,
   UpdateTimelinePostInput,
 } from "@/lib/types";
+import {
+  validateLuckRecordInput,
+  validateLuckRecordPatch,
+  validateMetaDiaryInput,
+  validateTimelinePostInput,
+  validateTimelinePostPatch,
+} from "@/lib/validation";
 
 // ─── キー定義 ─────────────────────────────────────────────
 
@@ -61,35 +68,6 @@ function getCurrentUserId(): string {
   const userId = "00000000-0000-4000-8000-000000000001";
   localStorage.setItem(KEYS.currentUserId, userId);
   return userId;
-}
-
-function assertNonEmptyString(value: string, fieldName: string): void {
-  if (value.trim().length === 0) {
-    throw new Error(`${fieldName} must not be empty`);
-  }
-}
-
-  function assertIsoDateString(value: string, fieldName: string): void {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      throw new Error(`${fieldName} must be in YYYY-MM-DD format`);
-    }
-  }
-
-function assertMoodScore(value: number): void {
-  if (!Number.isInteger(value) || value < 1 || value > 5) {
-    throw new Error("moodScore must be an integer between 1 and 5");
-  }
-}
-
-function assertTags(tags: string[]): void {
-  if (tags.some((tag) => tag.trim().length === 0)) {
-    throw new Error("tags must not contain empty values");
-  }
-
-  const normalizedTags = tags.map((tag) => tag.trim());
-  if (new Set(normalizedTags).size !== normalizedTags.length) {
-    throw new Error("tags must not contain duplicate values");
-  }
 }
 
 function withUserId<T extends { userId?: string }>(record: T): T & { userId: string } {
@@ -167,14 +145,12 @@ export function getTimelinePosts(): TimelinePost[] {
 export function addTimelinePost(
   draft: CreateTimelinePostInput
 ): TimelinePost {
-  assertNonEmptyString(draft.content, "content");
-  assertMoodScore(draft.moodScore);
-  assertTags(draft.tags);
+  const validatedDraft = validateTimelinePostInput(draft);
 
   const allPosts = readAllTimelinePosts();
   const posts = filterByCurrentUser(allPosts);
   const record: TimelinePost = {
-    ...draft,
+    ...validatedDraft,
     id: newId(),
     userId: getCurrentUserId(),
     createdAt: now(),
@@ -191,20 +167,12 @@ export function updateTimelinePost(
   id: string,
   patch: UpdateTimelinePostInput
 ): void {
-  if (patch.content !== undefined) {
-    assertNonEmptyString(patch.content, "content");
-  }
-  if (patch.moodScore !== undefined) {
-    assertMoodScore(patch.moodScore);
-  }
-  if (patch.tags !== undefined) {
-    assertTags(patch.tags);
-  }
+  const validatedPatch = validateTimelinePostPatch(patch);
 
   const allPosts = readAllTimelinePosts();
   const posts = filterByCurrentUser(allPosts).map((p) =>
     p.id === id && p.userId === getCurrentUserId()
-      ? { ...p, ...patch, updatedAt: now() }
+      ? { ...p, ...validatedPatch, updatedAt: now() }
       : p
   );
   save(KEYS.timelinePosts, replaceCurrentUserRecords(allPosts, posts));
@@ -377,13 +345,12 @@ export function getLuckRecords(): LuckRecord[] {
 export function addLuckRecord(
   draft: CreateLuckRecordInput
 ): LuckRecord {
-  assertNonEmptyString(draft.challengeText, "challengeText");
-  assertNonEmptyString(draft.emotionText, "emotionText");
+  const validatedDraft = validateLuckRecordInput(draft);
 
   const allRecords = readAllLuckRecords();
   const records = filterByCurrentUser(allRecords);
   const record: LuckRecord = {
-    ...draft,
+    ...validatedDraft,
     id: newId(),
     userId: getCurrentUserId(),
     createdAt: now(),
@@ -400,17 +367,12 @@ export function updateLuckRecord(
   id: string,
   patch: UpdateLuckRecordInput
 ): void {
-  if (patch.challengeText !== undefined) {
-    assertNonEmptyString(patch.challengeText, "challengeText");
-  }
-  if (patch.emotionText !== undefined) {
-    assertNonEmptyString(patch.emotionText, "emotionText");
-  }
+  const validatedPatch = validateLuckRecordPatch(patch);
 
   const allRecords = readAllLuckRecords();
   const records = filterByCurrentUser(allRecords).map((r) =>
     r.id === id && r.userId === getCurrentUserId()
-      ? { ...r, ...patch, updatedAt: now() }
+      ? { ...r, ...validatedPatch, updatedAt: now() }
       : r
   );
   save(KEYS.luckRecords, replaceCurrentUserRecords(allRecords, records));
@@ -442,10 +404,7 @@ export function upsertMetaDiary(
   diaryDate: string,
   patch: UpsertMetaDiaryInput
 ): MetaDiary {
-  assertIsoDateString(diaryDate, "diaryDate");
-  assertNonEmptyString(patch.goalText, "goalText");
-  assertNonEmptyString(patch.actualText, "actualText");
-  assertNonEmptyString(patch.tomorrowPlanText, "tomorrowPlanText");
+  const validatedPatch = validateMetaDiaryInput(diaryDate, patch);
 
   const allDiaries = readAllMetaDiaries();
   const currentUserDiaries = filterByCurrentUser(allDiaries);
@@ -455,7 +414,7 @@ export function upsertMetaDiary(
     const base = sameDateDiaries[0];
     const updated: MetaDiary = {
       ...base,
-      ...patch,
+      ...validatedPatch,
       diaryDate,
       updatedAt: now(),
     };
@@ -470,7 +429,7 @@ export function upsertMetaDiary(
   }
 
   const record: MetaDiary = {
-    ...patch,
+    ...validatedPatch,
     id: newId(),
     userId: getCurrentUserId(),
     diaryDate,
