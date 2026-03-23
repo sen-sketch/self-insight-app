@@ -310,6 +310,11 @@ export function reorderActiveHabits(habitIdsInOrder: string[]): void {
   save(KEYS.habits, replaceCurrentUserRecords(allHabits, habits));
 }
 
+export function deleteHabit(id: string): void {
+  const allHabits = readAllHabits();
+  const habits = filterByCurrentUser(allHabits).filter((h) => h.id !== id);
+  save(KEYS.habits, replaceCurrentUserRecords(allHabits, habits));
+}
 
 // ─── 習慣開始記録 ──────────────────────────────────────────
 
