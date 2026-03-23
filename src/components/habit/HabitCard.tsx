@@ -3,6 +3,8 @@
 import { useState } from "react";
 import type { CreateHabitInput, Habit } from "@/lib/types";
 import { HabitForm } from "./HabitForm";
+import { HabitWeeklySummary } from "./HabitWeeklySummary";
+
 
 type Props = {
   habit: Habit;
@@ -14,6 +16,7 @@ type Props = {
 
 export function HabitCard({ habit, onUpdate, onDelete, onToggleActive, onLogStart }: Props) {
   const [editing, setEditing] = useState(false);
+  const [showWeekly, setShowWeekly] = useState(false);
   const [showNoteInput, setShowNoteInput] = useState(false);
   const [note, setNote] = useState("");
 
@@ -70,6 +73,13 @@ export function HabitCard({ habit, onUpdate, onDelete, onToggleActive, onLogStar
           >
             {habit.isActive ? "有効" : "無効"}
           </button>
+          <button
+            onClick={() => setShowWeekly((prev) => !prev)}
+            className="rounded px-2 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+            >
+            週次
+            </button>
+
           <button
             onClick={() => setEditing(true)}
             className="rounded px-2 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
@@ -130,6 +140,7 @@ export function HabitCard({ habit, onUpdate, onDelete, onToggleActive, onLogStar
               </button>
             </div>
           )}
+          {showWeekly && <HabitWeeklySummary habitId={habit.id} />}
         </div>
       )}
     </div>

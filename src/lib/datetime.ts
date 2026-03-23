@@ -28,6 +28,13 @@ const DISPLAY_DATETIME_FORMATTER = new Intl.DateTimeFormat("ja-JP", {
   hour12: false,
 });
 
+const TOKYO_TIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: TOKYO_TIME_ZONE,
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+
 function parseDateInput(input: DateInput): Date {
     const date = input instanceof Date ? new Date(input.getTime()) : new Date(input);
     if (Number.isNaN(date.getTime())) {
@@ -106,3 +113,12 @@ export function formatDisplayDateTime(input: DateInput): string {
 export const getRecent1DayRange = (base?: DateInput) => getRecentDateRange(1, base);
 export const getRecent7DayRange = (base?: DateInput) => getRecentDateRange(7, base);
 export const getRecent30DayRange = (base?: DateInput) => getRecentDateRange(30, base);
+
+export function toTokyoHHmm(input: DateInput): string {
+  const date = parseDateInput(input);
+  const parts = TOKYO_TIME_FORMATTER.formatToParts(date);
+  const hour = parts.find((p) => p.type === "hour")?.value ?? "00";
+  const minute = parts.find((p) => p.type === "minute")?.value ?? "00";
+  // 一部ブラウザで "24" が返ることがある
+  return `${hour === "24" ? "00" : hour}:${minute}`;
+}
