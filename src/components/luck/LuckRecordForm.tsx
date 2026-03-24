@@ -19,11 +19,15 @@ type Props = {
 };
 
 function toDatetimeLocalValue(iso: string): string {
-  return iso.slice(0, 16);
+  const d = new Date(iso);
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
 }
 
 function nowDatetimeLocalValue(): string {
-  return toDatetimeLocalValue(new Date().toISOString());
+  const d = new Date();
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
 }
 
 export function LuckRecordForm({

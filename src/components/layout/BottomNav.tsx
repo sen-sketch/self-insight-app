@@ -15,7 +15,7 @@ const NAV_ITEMS = [
 export function BottomNav() {
     const pathname = usePathname();
     return (
-        <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-14 items-stretch border-t border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+        <nav className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[calc(56px+env(safe-area-inset-bottom))] w-full max-w-md items-stretch border-t border-zinc-200 bg-white pb-[env(safe-area-inset-bottom)] dark:border-zinc-700 dark:bg-zinc-900">
             {NAV_ITEMS.map(({ href, label, emoji }) => {
                 const active = pathname === href;
                 return (

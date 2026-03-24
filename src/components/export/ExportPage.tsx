@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { toTokyoYmd, getRecentDateRange } from "@/lib/datetime";
 import {
   getTimelinePosts,
@@ -18,6 +18,31 @@ const PRESET_DAYS = [
   { label: "直近30日", days: 30 as const },
 ];
 
+async function copyTextWithFallback(text: string): Promise<boolean> {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return true;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "0";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+
+  const ok = document.execCommand("copy");
+  document.body.removeChild(textarea);
+  return ok;
+}
+
+
 const TARGET_ITEMS = [
   { key: "timeline", label: "タイムライン" },
   { key: "habit", label: "習慣記録" },
@@ -28,11 +53,9 @@ const TARGET_ITEMS = [
 export function ExportPage() {
   const today = toTokyoYmd();
 
-  // ステップ1：期間選択
   const [fromDate, setFromDate] = useState(() => getRecentDateRange(7).fromDate);
   const [toDate, setToDate] = useState(today);
 
-  // ステップ2：出力対象チェック
   const [targets, setTargets] = useState<ExportTargets>({
     timeline: true,
     habit: true,
@@ -40,13 +63,14 @@ export function ExportPage() {
     metaDiary: true,
   });
 
-  // ステップ8：出力欄
   const [outputText, setOutputText] = useState("");
 
-  // ステップ9：コピーボタン
   const [copied, setCopied] = useState(false);
 
-  // ステップ7：生成処理
+  const [copyError, setCopyError] = useState<string | null>(null);
+  const outputRef = useRef<HTMLTextAreaElement | null>(null);
+
+
   const generate = useCallback(() => {
     const period: ExportPeriod = { fromDate, toDate };
     const text = buildExportText({
@@ -64,10 +88,26 @@ export function ExportPage() {
 
   const handleCopy = useCallback(async () => {
     if (!outputText) return;
-    await navigator.clipboard.writeText(outputText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }, [outputText]);
+
+    setCopyError(null);
+
+    try {
+        const ok = await copyTextWithFallback(outputText);
+        if (!ok) throw new Error("copy failed");
+
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    } catch {
+        const el = outputRef.current;
+        if (el) {
+        el.focus();
+        el.select();
+        el.setSelectionRange(0, el.value.length);
+        }
+        setCopyError("自動コピー失敗。テキストを長押ししてコピーしてください。");
+    }
+    }, [outputText]);
+
 
   const handlePreset = (days: 1 | 7 | 30) => {
     const range = getRecentDateRange(days);
@@ -165,7 +205,7 @@ export function ExportPage() {
               出力テキスト
             </h2>
             <div className="flex gap-2">
-              {/* ステップ10：再生成ボタン */}
+              
               <button
                 type="button"
                 onClick={generate}
@@ -175,7 +215,7 @@ export function ExportPage() {
               >
                 再生成
               </button>
-              {/* ステップ9：コピーボタン */}
+              
               <button
                 type="button"
                 onClick={handleCopy}
@@ -184,9 +224,13 @@ export function ExportPage() {
               >
                 {copied ? "コピー済み ✓" : "コピー"}
               </button>
+              {copyError && (
+                <p className="text-xs text-red-500">{copyError}</p>
+                )}
             </div>
           </div>
           <textarea
+            ref={outputRef}
             readOnly
             value={outputText}
             rows={20}
