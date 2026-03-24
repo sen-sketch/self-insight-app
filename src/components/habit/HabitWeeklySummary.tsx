@@ -84,7 +84,11 @@ export function HabitWeeklySummary({ habitId }: Props) {
           {directionNode}
         </div>
       </div>
-      <HabitStartDotPlot entries={stats.currentWeek} />
+      <div className="overflow-x-auto">
+        <div className="min-w-[280px]">
+          <HabitStartDotPlot entries={stats.currentWeek} />
+        </div>
+      </div>
     </div>
   );
 }

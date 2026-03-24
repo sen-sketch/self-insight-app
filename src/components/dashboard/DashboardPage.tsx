@@ -9,7 +9,7 @@ import {
   getMetaDiaryByDate,
   getHabits,
 } from "@/storage";
-import { toTokyoYmd } from "@/lib/datetime";
+import { formatDisplayDateTime, toTokyoYmd } from "@/lib/datetime";
 import { getHabitWeeklyStats } from "@/lib/habitStats";
 import type { TimelinePost } from "@/lib/types";
 import type { DailyStartEntry } from "@/lib/habitStats";
@@ -51,13 +51,7 @@ function SummaryCard({ label, value }: SummaryCardProps) {
 const MOOD_LABELS = ["", "😞", "😕", "😐", "🙂", "😊"] as const;
 
 function RecentPostItem({ post }: { post: TimelinePost }) {
-  const date = new Date(post.postedAt).toLocaleString("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const date = formatDisplayDateTime(post.postedAt);
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800/50">
       <div className="flex items-center justify-between">
@@ -116,23 +110,23 @@ export function DashboardPage() {
   const [today] = useState(() => toTokyoYmd());
 
   const [data] = useState(() => {
-  const t = toTokyoYmd();
-  const posts = getTimelinePosts();
-  const logs = getHabitStartLogs();
-  const luckRecords = getLuckRecords();
-  const diary = getMetaDiaryByDate(t);
-  const activeHabits = getHabits().filter((h) => h.isActive);
+    const t = toTokyoYmd();
+    const posts = getTimelinePosts();
+    const logs = getHabitStartLogs();
+    const luckRecords = getLuckRecords();
+    const diary = getMetaDiaryByDate(t);
+    const activeHabits = getHabits().filter((h) => h.isActive);
 
-  return {
-    todayPostCount: posts.filter((p) => toTokyoYmd(p.postedAt) === t).length,
-    todayHabitStartCount: logs.filter((l) => toTokyoYmd(l.startedAt) === t).length,
-    todayLuckCount: luckRecords.filter((r) => toTokyoYmd(r.recordedAt) === t).length,
-    hasDiary: diary !== null,
-    recentPosts: posts.slice(0, 3),
-    activeHabits,
-    allLogs: logs,
-  };
-});
+    return {
+      todayPostCount: posts.filter((p) => toTokyoYmd(p.postedAt) === t).length,
+      todayHabitStartCount: logs.filter((l) => toTokyoYmd(l.startedAt) === t).length,
+      todayLuckCount: luckRecords.filter((r) => toTokyoYmd(r.recordedAt) === t).length,
+      hasDiary: diary !== null,
+      recentPosts: posts.slice(0, 3),
+      activeHabits,
+      allLogs: logs,
+    };
+  });
 
   const habitStats = useMemo(
     () =>

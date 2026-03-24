@@ -26,7 +26,7 @@ export function TimelinePage() {
 
   function reload() {
     setPosts(getTimelinePosts());
-    }
+  }
 
   function handleAdd(data: UpdateData) {
     addTimelinePost(data);

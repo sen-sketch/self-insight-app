@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { BottomNav } from "@/components/layout/BottomNav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,7 +28,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full bg-zinc-50 dark:bg-zinc-950">
+        <main className="mx-auto w-full min-w-[360px] max-w-md px-4 py-5 pb-20">
+          {children}
+        </main>
+        <BottomNav />
+      </body>
+
     </html>
   );
 }
