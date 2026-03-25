@@ -29,10 +29,10 @@ export function HabitForm({ initialValues, onSubmit, onCancel }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900"
+      className="flex flex-col gap-3 border border-zinc-900 bg-[#f0ede6] p-4"
     >
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        <label className="text-xs font-medium text-zinc-600">
           タスク名 *
         </label>
         <input
@@ -40,29 +40,29 @@ export function HabitForm({ initialValues, onSubmit, onCancel }: Props) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="例：朝のランニング"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
           required
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        <label className="text-xs font-medium text-zinc-600">
           目標開始時刻（任意）
         </label>
         <input
           type="time"
           value={targetStartTime}
           onChange={(e) => setTargetStartTime(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+      <label className="flex items-center gap-2 text-sm text-zinc-700">
         <input
           type="checkbox"
           checked={isActive}
           onChange={(e) => setIsActive(e.target.checked)}
-          className="h-4 w-4 accent-blue-500"
+          className="h-4 w-4 accent-[#3d5016]"
         />
         有効にする
       </label>
@@ -71,14 +71,14 @@ export function HabitForm({ initialValues, onSubmit, onCancel }: Props) {
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
+          className="px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-700"
         >
           キャンセル
         </button>
         <button
           type="submit"
           disabled={!name.trim()}
-          className="rounded-lg bg-blue-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-600 disabled:opacity-40"
+          className="border border-zinc-900 bg-[#3d5016] px-3 py-1.5 text-sm font-bold text-white hover:bg-[#4a6320] disabled:opacity-40"
         >
           保存
         </button>

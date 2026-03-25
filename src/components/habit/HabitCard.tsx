@@ -54,15 +54,15 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
 
   return (
     <div
-      className={`rounded-xl border p-4 transition-opacity ${
+      className={`border p-4 transition-opacity ${
         habit.isActive
-          ? "border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900"
-          : "border-zinc-200 bg-zinc-50 opacity-60 dark:border-zinc-700 dark:bg-zinc-800"
+          ? "border-zinc-900 bg-[#f0ede6]"
+          : "border-zinc-900 bg-[#f0ede6] opacity-60"
       }`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-0.5">
-          <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          <span className="text-sm font-medium text-zinc-900">
             {habit.name}
           </span>
           {habit.targetStartTime && (
@@ -72,10 +72,10 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
         <div className="flex shrink-0 items-center gap-1">
           <button
             onClick={() => onToggleActive(habit.id, !habit.isActive)}
-            className={`rounded px-2 py-0.5 text-xs font-medium ${
+            className={`px-2 py-0.5 text-xs font-medium border ${
               habit.isActive
-                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
-                : "bg-zinc-200 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400"
+                ? "border-[#3d5016] text-[#3d5016]"
+                : "border-zinc-400 text-zinc-500"
             }`}
           >
             {habit.isActive ? "有効" : "無効"}
@@ -85,12 +85,12 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
               <button
                 onClick={onMoveUp}
                 disabled={!canMoveUp}
-                className="rounded px-1.5 py-0.5 text-amber-400 hover:text-amber-600 disabled:opacity-30 dark:hover:text-amber-300"
+                className="px-1.5 py-0.5 text-zinc-400 hover:text-zinc-900 disabled:opacity-30"
               ><ChevronUp size={14} strokeWidth={3} /></button>
               <button
                 onClick={onMoveDown}
                 disabled={!canMoveDown}
-                className="rounded px-1.5 py-0.5 text-amber-400 hover:text-amber-600 disabled:opacity-30 dark:hover:text-amber-300"
+                className="px-1.5 py-0.5 text-zinc-400 hover:text-zinc-900 disabled:opacity-30"
               ><ChevronDown size={14} strokeWidth={3} /></button>
             </>
           )}
@@ -98,7 +98,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
           <button
             onClick={() => setShowWeekly((prev) => !prev)}
             title="週次サマリー"
-            className="rounded px-1.5 py-0.5 text-amber-600 hover:text-amber-700 dark:hover:text-amber-400"
+            className="px-1.5 py-0.5 text-zinc-600 hover:text-zinc-900"
           >
             <BarChart2 size={14} strokeWidth={3} />
           </button>
@@ -106,7 +106,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
           <button
             onClick={() => setEditing(true)}
             title="編集"
-            className="rounded px-1.5 py-0.5 text-amber-500 hover:text-amber-700 dark:hover:text-amber-300"
+            className="px-1.5 py-0.5 text-[#3d5016] hover:text-zinc-900"
           >
             <Pencil size={14} strokeWidth={3} />
           </button>
@@ -115,7 +115,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
               if (confirm(`「${habit.name}」を削除しますか？`)) onDelete(habit.id);
             }}
             title="削除"
-            className="rounded px-1.5 py-0.5 text-orange-500 hover:text-orange-600"
+            className="px-1.5 py-0.5 text-zinc-600 hover:text-zinc-900"
           >
             <Trash2 size={14} strokeWidth={3} />
           </button>
@@ -132,18 +132,18 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="補足メモ（任意）"
                 autoFocus
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                className="border border-zinc-900 bg-transparent px-3 py-1.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
               />
               <div className="flex gap-2">
                 <button
                   onClick={handleConfirmNote}
-                  className="flex-1 rounded-lg bg-blue-500 py-1.5 text-sm font-medium text-white hover:bg-blue-600"
+                  className="flex-1 border border-zinc-900 bg-[#3d5016] py-1.5 text-sm font-bold text-white hover:bg-[#4a6320]"
                 >
                   記録する
                 </button>
                 <button
                   onClick={() => { setShowNoteInput(false); setNote(""); }}
-                  className="rounded-lg px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-700"
+                  className="px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-700"
                 >
                   キャンセル
                 </button>
@@ -153,13 +153,13 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
             <div className="flex gap-2">
               <button
                 onClick={() => onLogStart(habit.id, null)}
-                className="flex-1 rounded-lg bg-emerald-500 py-1.5 text-sm font-medium text-white hover:bg-emerald-600"
+                className="flex-1 border border-zinc-900 bg-[#3d5016] py-1.5 text-sm font-bold text-white hover:bg-[#4a6320]"
               >
                 開始
               </button>
               <button
                 onClick={() => setShowNoteInput(true)}
-                className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs text-zinc-500 hover:bg-zinc-50 dark:border-zinc-600 dark:hover:bg-zinc-800"
+                className="border border-zinc-900 px-3 py-1.5 text-xs text-zinc-500 hover:bg-zinc-200"
               >
                 メモ付き
               </button>
@@ -175,7 +175,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
             return (
               <div className="flex flex-wrap gap-1">
                 {todayLogs.map((l) => (
-                  <span key={l.id} className="rounded bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                  <span key={l.id} className="border border-[#3d5016] px-2 py-0.5 text-xs text-[#3d5016]">
                     {toTokyoHHmm(l.startedAt)}{l.note ? ` (${l.note})` : ""}
                   </span>
                 ))}
