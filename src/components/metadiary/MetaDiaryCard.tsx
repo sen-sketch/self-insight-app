@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { MetaDiary } from "@/lib/types";
+import { Trash2 } from "lucide-react";
 
 type Props = {
   diary: MetaDiary;
@@ -20,9 +21,10 @@ export function MetaDiaryCard({ diary, onDelete }: Props) {
         {!confirmDelete ? (
           <button
             onClick={() => setConfirmDelete(true)}
-            className="text-xs text-zinc-400 hover:text-red-500 transition-colors"
+            title="削除"
+            className="p-1 text-zinc-400 hover:text-red-500 transition-colors"
           >
-            削除
+            <Trash2 size={14} />
           </button>
         ) : (
           <div className="flex items-center gap-2">

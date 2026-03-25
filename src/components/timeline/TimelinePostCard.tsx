@@ -5,6 +5,8 @@ import { useState } from "react";
 import type { MoodScore, TimelinePost } from "@/lib/types";
 import { formatDisplayDateTime } from "@/lib/datetime";
 import { TimelinePostForm } from "./TimelinePostForm";
+import { Pencil, Trash2, Annoyed, Frown, Meh, Smile, Laugh } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 type Props = {
     post: TimelinePost;
@@ -12,12 +14,12 @@ type Props = {
     onDelete: (id: string) => void;
 };
 
-const MOOD_LABELS: Record<MoodScore, string> = {
-  1: "😞",
-  2: "😕",
-  3: "😐",
-  4: "🙂",
-  5: "😄",
+const MOOD_ICONS: Record<MoodScore, LucideIcon> = {
+  1: Annoyed,
+  2: Frown,
+  3: Meh,
+  4: Smile,
+  5: Laugh,
 };
 
 export function TimelinePostCard({ post, onUpdate, onDelete }: Props) {
@@ -43,24 +45,25 @@ export function TimelinePostCard({ post, onUpdate, onDelete }: Props) {
             {/* ヘッダー */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <span className="text-xl" aria-label={`気分スコア ${post.moodScore}`}>
-                        {MOOD_LABELS[post.moodScore]}
-                    </span>
+                    {(() => { const Icon = MOOD_ICONS[post.moodScore]; return <Icon size={20} aria-label={`気分スコア ${post.moodScore}`} className="text-zinc-500 dark:text-zinc-400" />; })()}
                     <span className="text-xs text-zinc-400 dark:text-zinc-500">
                         {formatDisplayDateTime(post.postedAt)}
                     </span>
                 </div>
                 <div className="flex gap-1">
                     <button
-                    onClick={() =>setIsEditing(true)}
-                    className="rounded-md px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800">
-                        編集
+                        onClick={() => setIsEditing(true)}
+                        title="編集"
+                        className="rounded-md p-1 text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    >
+                        <Pencil size={14} />
                     </button>
                     <button
                         onClick={() => setIsConfirmingDelete(true)}
-                        className="rounded-md px-2 py-1 text-xs text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
+                        title="削除"
+                        className="rounded-md p-1 text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
                     >
-                        削除
+                        <Trash2 size={14} />
                     </button>
                 </div>
             </div>

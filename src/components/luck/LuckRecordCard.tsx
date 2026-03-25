@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { LuckRecord, UpdateLuckRecordInput } from "@/lib/types";
 import { formatDisplayDateTime } from "@/lib/datetime";
 import { LuckRecordForm } from "./LuckRecordForm";
+import { Clover, Pencil, Trash2 } from "lucide-react";
 
 type Props = {
   record: LuckRecord;
@@ -34,7 +35,7 @@ export function LuckRecordCard({ record, onUpdate, onDelete }: Props) {
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg">🍀</span>
+          <Clover size={18} className="text-emerald-500" />
           <span className="text-xs text-zinc-400 dark:text-zinc-500">
             {formatDisplayDateTime(record.recordedAt)}
           </span>
@@ -42,15 +43,17 @@ export function LuckRecordCard({ record, onUpdate, onDelete }: Props) {
         <div className="flex gap-1">
           <button
             onClick={() => setIsEditing(true)}
-            className="rounded-md px-2 py-1 text-xs text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            title="編集"
+            className="rounded-md p-1 text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
           >
-            編集
+            <Pencil size={14} />
           </button>
           <button
             onClick={() => setIsConfirmingDelete(true)}
-            className="rounded-md px-2 py-1 text-xs text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
+            title="削除"
+            className="rounded-md p-1 text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
           >
-            削除
+            <Trash2 size={14} />
           </button>
         </div>
       </div>

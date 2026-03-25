@@ -3,6 +3,8 @@
 
 import { useState } from "react";
 import type { MoodScore, TimelinePost } from "@/lib/types";
+import { Annoyed, Frown, Meh, Smile, Laugh } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 type SubmitData = {
   postedAt: string;
@@ -19,12 +21,12 @@ type Props = {
 };
 
 const MOOD_SCORES: MoodScore[] = [1, 2, 3, 4, 5];
-const MOOD_LABELS: Record<MoodScore, string> = {
-  1: "😞",
-  2: "😕",
-  3: "😐",
-  4: "🙂",
-  5: "😄",
+const MOOD_ICONS: Record<MoodScore, LucideIcon> = {
+  1: Annoyed,
+  2: Frown,
+  3: Meh,
+  4: Smile,
+  5: Laugh,
 };
 
 function toDatetimeLocalValue(iso: string): string {
@@ -91,21 +93,24 @@ export function TimelinePostForm({
       <div className="flex flex-col gap-1">
         <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">気分</span>
         <div className="flex gap-2">
-          {MOOD_SCORES.map((score) => (
-            <button
-              key={score}
-              type="button"
-              onClick={() => setMoodScore(score)}
-              aria-label={`気分スコア ${score}`}
-              className={`flex h-10 w-10 items-center justify-center rounded-full text-xl transition-all ${
-                moodScore === score
-                  ? "bg-blue-500 ring-2 ring-blue-300"
-                  : "bg-zinc-100 dark:bg-zinc-800"
-              }`}
-            >
-              {MOOD_LABELS[score]}
-            </button>
-          ))}
+          {MOOD_SCORES.map((score) => {
+            const Icon = MOOD_ICONS[score];
+            return (
+              <button
+                key={score}
+                type="button"
+                onClick={() => setMoodScore(score)}
+                aria-label={`気分スコア ${score}`}
+                className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
+                  moodScore === score
+                    ? "bg-blue-500 text-white ring-2 ring-blue-300"
+                    : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                }`}
+              >
+                <Icon size={20} />
+              </button>
+            );
+          })}
         </div>
       </div>
 

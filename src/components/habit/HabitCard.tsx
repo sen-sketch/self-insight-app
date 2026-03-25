@@ -5,6 +5,7 @@ import type { CreateHabitInput, Habit, HabitStartLog } from "@/lib/types";
 import { HabitForm } from "./HabitForm";
 import { HabitWeeklySummary } from "./HabitWeeklySummary";
 import { toTokyoYmd, toTokyoHHmm } from "@/lib/datetime";
+import { ChevronUp, ChevronDown, Pencil, Trash2, BarChart2 } from "lucide-react";
 
 
 type Props = {
@@ -84,36 +85,39 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
               <button
                 onClick={onMoveUp}
                 disabled={!canMoveUp}
-                className="rounded px-1.5 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
-              >↑</button>
+                className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
+              ><ChevronUp size={14} /></button>
               <button
                 onClick={onMoveDown}
                 disabled={!canMoveDown}
-                className="rounded px-1.5 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
-              >↓</button>
+                className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
+              ><ChevronDown size={14} /></button>
             </>
           )}
 
           <button
             onClick={() => setShowWeekly((prev) => !prev)}
-            className="rounded px-2 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
-            >
-            週次
-            </button>
+            title="週次サマリー"
+            className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+          >
+            <BarChart2 size={14} />
+          </button>
 
           <button
             onClick={() => setEditing(true)}
-            className="rounded px-2 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+            title="編集"
+            className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
           >
-            編集
+            <Pencil size={14} />
           </button>
           <button
             onClick={() => {
               if (confirm(`「${habit.name}」を削除しますか？`)) onDelete(habit.id);
             }}
-            className="rounded px-2 py-0.5 text-xs text-red-400 hover:text-red-600"
+            title="削除"
+            className="rounded px-1.5 py-0.5 text-red-400 hover:text-red-600"
           >
-            削除
+            <Trash2 size={14} />
           </button>
         </div>
       </div>

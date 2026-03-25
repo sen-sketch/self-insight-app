@@ -12,6 +12,7 @@ import { toTokyoYmd } from "@/lib/datetime";
 import { LuckRecordForm } from "./LuckRecordForm";
 import { LuckRecordList } from "./LuckRecordList";
 import { LuckDateFilter } from "./LuckDateFilter";
+import { Clover } from "lucide-react";
 
 export function LuckPage() {
   const [records, setRecords] = useState<LuckRecord[]>(() => getLuckRecords());
@@ -52,7 +53,7 @@ export function LuckPage() {
     <div className="flex flex-col gap-4 px-4 py-6">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-          🍀 運を上げる記録
+          <Clover size={20} className="inline-block" /> 運を上げる記録
         </h1>
         <button
           onClick={() => setShowForm((prev) => !prev)}

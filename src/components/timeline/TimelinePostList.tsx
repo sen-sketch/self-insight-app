@@ -1,6 +1,7 @@
 // 投稿一覧、降順表示
 import type { MoodScore, TimelinePost } from "@/lib/types";
 import { TimelinePostCard } from "./TimelinePostCard";
+import { FileText } from "lucide-react";
 
 type Props = {
   posts: TimelinePost[];
@@ -12,7 +13,7 @@ export function TimelinePostList({ posts, onUpdate, onDelete }: Props) {
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 py-16 text-zinc-400">
-        <span className="text-4xl">📝</span>
+        <FileText size={40} className="text-zinc-300" />
         <p className="text-sm">投稿がありません</p>
       </div>
     );

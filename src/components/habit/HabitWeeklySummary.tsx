@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { getHabitStartLogs } from "@/storage";
 import { getHabitWeeklyStats } from "@/lib/habitStats";
 import type { DailyStartEntry } from "@/lib/habitStats";
+import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 // ─── 表示ユーティリティ ───────────────────────────────────────
 
@@ -65,10 +66,10 @@ export function HabitWeeklySummary({ habitId }: Props) {
     if (stats.direction === null) return null;
     const abs = Math.abs(stats.diffMinutes!);
     if (stats.direction === "earlier")
-      return <span className="text-emerald-600 dark:text-emerald-400">▲ {abs}分 早まった</span>;
+      return <span className="flex items-center gap-0.5 text-emerald-600 dark:text-emerald-400"><TrendingUp size={12} /> {abs}分 早まった</span>;
     if (stats.direction === "later")
-      return <span className="text-red-500 dark:text-red-400">▼ {abs}分 遅れた</span>;
-    return <span className="text-zinc-400">→ ほぼ同じ</span>;
+      return <span className="flex items-center gap-0.5 text-red-500 dark:text-red-400"><TrendingDown size={12} /> {abs}分 遅れた</span>;
+    return <span className="flex items-center gap-0.5 text-zinc-400"><Minus size={12} /> ほぼ同じ</span>;
   })();
 
   return (

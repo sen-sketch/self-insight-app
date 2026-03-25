@@ -13,6 +13,8 @@ import { formatDisplayDateTime, toTokyoYmd } from "@/lib/datetime";
 import { getHabitWeeklyStats } from "@/lib/habitStats";
 import type { TimelinePost } from "@/lib/types";
 import type { DailyStartEntry } from "@/lib/habitStats";
+import { PenLine, CheckSquare, Clover, BookOpen, Annoyed, Frown, Meh, Smile, Laugh } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 // ─── ユーティリティ ────────────────────────────────────────────
 
@@ -48,7 +50,13 @@ function SummaryCard({ label, value }: SummaryCardProps) {
 
 // ─── 直近投稿アイテム ──────────────────────────────────────────
 
-const MOOD_LABELS = ["", "😞", "😕", "😐", "🙂", "😊"] as const;
+const MOOD_ICONS: Record<number, LucideIcon> = {
+  1: Annoyed,
+  2: Frown,
+  3: Meh,
+  4: Smile,
+  5: Laugh,
+};
 
 function RecentPostItem({ post }: { post: TimelinePost }) {
   const date = formatDisplayDateTime(post.postedAt);
@@ -56,7 +64,7 @@ function RecentPostItem({ post }: { post: TimelinePost }) {
     <div className="flex flex-col gap-1 rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800/50">
       <div className="flex items-center justify-between">
         <span className="text-xs text-zinc-400">{date}</span>
-        <span className="text-sm">{MOOD_LABELS[post.moodScore]}</span>
+        {(() => { const Icon = MOOD_ICONS[post.moodScore]; return Icon ? <Icon size={16} className="text-zinc-400" /> : null; })()}
       </div>
       <p className="line-clamp-2 text-sm text-zinc-700 dark:text-zinc-300">{post.content}</p>
     </div>
@@ -92,13 +100,13 @@ function MiniDotRow({ entries }: { entries: DailyStartEntry[] }) {
 
 // ─── クイック入力ボタン ────────────────────────────────────────
 
-function QuickButton({ href, label, emoji }: { href: string; label: string; emoji: string }) {
+function QuickButton({ href, label, Icon }: { href: string; label: string; Icon: LucideIcon }) {
   return (
     <Link
       href={href}
       className="flex flex-1 flex-col items-center gap-1 rounded-xl border border-zinc-200 bg-white px-2 py-3 text-center transition-colors hover:bg-zinc-50 active:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
     >
-      <span className="text-2xl">{emoji}</span>
+      <Icon size={24} className="text-zinc-600 dark:text-zinc-300" />
       <span className="text-xs text-zinc-600 dark:text-zinc-300">{label}</span>
     </Link>
   );
@@ -160,10 +168,10 @@ export function DashboardPage() {
       <section>
         <h2 className="mb-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">クイック入力</h2>
         <div className="flex gap-2">
-          <QuickButton href="/timeline" label="投稿" emoji="📝" />
-          <QuickButton href="/tracker" label="習慣" emoji="✅" />
-          <QuickButton href="/luck" label="運記録" emoji="🍀" />
-          <QuickButton href="/metadiary" label="日記" emoji="📔" />
+          <QuickButton href="/timeline" label="投稿" Icon={PenLine} />
+          <QuickButton href="/tracker" label="習慣" Icon={CheckSquare} />
+          <QuickButton href="/luck" label="運記録" Icon={Clover} />
+          <QuickButton href="/metadiary" label="日記" Icon={BookOpen} />
         </div>
       </section>
 
