@@ -1,16 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Kosugi_Maru } from "next/font/google";
 import { BottomNav } from "@/components/layout/BottomNav";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const kosugiMaru = Kosugi_Maru({
+  variable: "--font-kosugi-maru",
+  weight: "400",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -33,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${kosugiMaru.variable} h-full antialiased`}
     >
       <body className="min-h-dvh bg-zinc-50 pb-[calc(56px+env(safe-area-inset-bottom))] dark:bg-zinc-950">
         <main className="mx-auto w-full max-w-md px-4 py-5">
