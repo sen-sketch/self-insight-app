@@ -17,7 +17,7 @@ const NAV_ITEMS: { href: string; label: string; Icon: LucideIcon }[] = [
 export function BottomNav() {
     const pathname = usePathname();
     return (
-        <nav className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[calc(56px+env(safe-area-inset-bottom))] w-full max-w-md items-stretch border-t border-zinc-200 bg-white pb-[env(safe-area-inset-bottom)] dark:border-zinc-700 dark:bg-zinc-900">
+        <nav className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[calc(56px+env(safe-area-inset-bottom))] w-full max-w-md items-stretch border-t border-zinc-900 bg-[#f0ede6] pb-[env(safe-area-inset-bottom)]">
             {NAV_ITEMS.map(({ href, label, Icon }) => {
                 const active = pathname === href;
                 return (
@@ -26,8 +26,8 @@ export function BottomNav() {
                     href={href}
                     className={`flex flex-1 flex-col items-center justify-center gap-0.5 transition-colors ${
                         active
-                            ? "text-orange-500 dark:text-orange-400"
-                            : "text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+                            ? "text-[#3d5016]"
+                            : "text-zinc-400 hover:text-zinc-900"
                     }`}
                 >
                     <Icon size={20} strokeWidth={3} />
