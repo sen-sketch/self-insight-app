@@ -31,7 +31,7 @@ export default function RootLayout({
       lang="en"
       className={`${kosugiMaru.variable} h-full antialiased`}
     >
-      <body className="min-h-dvh bg-zinc-50 pb-[calc(56px+env(safe-area-inset-bottom))] dark:bg-zinc-950">
+      <body className="min-h-dvh bg-[#f0ede6] pb-[calc(56px+env(safe-area-inset-bottom))]">
         <main className="mx-auto w-full max-w-md px-4 py-5">
           {children}
         </main>
