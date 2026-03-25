@@ -22,9 +22,9 @@ export function MetaDiaryCard({ diary, onDelete }: Props) {
           <button
             onClick={() => setConfirmDelete(true)}
             title="削除"
-            className="p-1 text-zinc-400 hover:text-red-500 transition-colors"
+            className="p-1 text-orange-400 hover:text-orange-600 transition-colors"
           >
-            <Trash2 size={14} />
+            <Trash2 size={14} strokeWidth={3} />
           </button>
         ) : (
           <div className="flex items-center gap-2">

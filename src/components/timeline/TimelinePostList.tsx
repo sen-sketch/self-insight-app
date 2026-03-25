@@ -13,7 +13,7 @@ export function TimelinePostList({ posts, onUpdate, onDelete }: Props) {
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 py-16 text-zinc-400">
-        <FileText size={40} className="text-zinc-300" />
+        <FileText size={40} strokeWidth={3} className="text-zinc-300" />
         <p className="text-sm">投稿がありません</p>
       </div>
     );

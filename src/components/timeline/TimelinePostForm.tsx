@@ -103,11 +103,11 @@ export function TimelinePostForm({
                 aria-label={`気分スコア ${score}`}
                 className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
                   moodScore === score
-                    ? "bg-blue-500 text-white ring-2 ring-blue-300"
+                    ? "bg-orange-500 text-white ring-2 ring-orange-300"
                     : "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
                 }`}
               >
-                <Icon size={20} />
+                <Icon size={20} strokeWidth={3} />
               </button>
             );
           })}

@@ -49,7 +49,7 @@ export function MetaDiaryPage() {
   return (
     <div className="flex flex-col gap-6 px-4 py-6">
       <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-        <Notebook size={20} className="inline-block" /> メタ認知日記
+        <Notebook size={20} strokeWidth={3} className="inline-block text-orange-500" /> メタ認知日記
       </h1>
 
       <section className="flex flex-col gap-2">

@@ -85,39 +85,39 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
               <button
                 onClick={onMoveUp}
                 disabled={!canMoveUp}
-                className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
-              ><ChevronUp size={14} /></button>
+                className="rounded px-1.5 py-0.5 text-amber-400 hover:text-amber-600 disabled:opacity-30 dark:hover:text-amber-300"
+              ><ChevronUp size={14} strokeWidth={3} /></button>
               <button
                 onClick={onMoveDown}
                 disabled={!canMoveDown}
-                className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
-              ><ChevronDown size={14} /></button>
+                className="rounded px-1.5 py-0.5 text-amber-400 hover:text-amber-600 disabled:opacity-30 dark:hover:text-amber-300"
+              ><ChevronDown size={14} strokeWidth={3} /></button>
             </>
           )}
 
           <button
             onClick={() => setShowWeekly((prev) => !prev)}
             title="週次サマリー"
-            className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+            className="rounded px-1.5 py-0.5 text-amber-600 hover:text-amber-700 dark:hover:text-amber-400"
           >
-            <BarChart2 size={14} />
+            <BarChart2 size={14} strokeWidth={3} />
           </button>
 
           <button
             onClick={() => setEditing(true)}
             title="編集"
-            className="rounded px-1.5 py-0.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+            className="rounded px-1.5 py-0.5 text-amber-500 hover:text-amber-700 dark:hover:text-amber-300"
           >
-            <Pencil size={14} />
+            <Pencil size={14} strokeWidth={3} />
           </button>
           <button
             onClick={() => {
               if (confirm(`「${habit.name}」を削除しますか？`)) onDelete(habit.id);
             }}
             title="削除"
-            className="rounded px-1.5 py-0.5 text-red-400 hover:text-red-600"
+            className="rounded px-1.5 py-0.5 text-orange-500 hover:text-orange-600"
           >
-            <Trash2 size={14} />
+            <Trash2 size={14} strokeWidth={3} />
           </button>
         </div>
       </div>

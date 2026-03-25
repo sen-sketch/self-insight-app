@@ -26,11 +26,11 @@ export function BottomNav() {
                     href={href}
                     className={`flex flex-1 flex-col items-center justify-center gap-0.5 transition-colors ${
                         active
-                            ? "text-blue-600 dark:text-blue-400"
+                            ? "text-orange-500 dark:text-orange-400"
                             : "text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
                     }`}
                 >
-                    <Icon size={20} />
+                    <Icon size={20} strokeWidth={3} />
                     <span className="text-[10px] leading-none">{label}</span>
                 </Link>
                 );

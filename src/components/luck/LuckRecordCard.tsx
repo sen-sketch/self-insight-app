@@ -35,7 +35,7 @@ export function LuckRecordCard({ record, onUpdate, onDelete }: Props) {
       {/* ヘッダー */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Clover size={18} className="text-emerald-500" />
+          <Clover size={18} strokeWidth={3} className="text-yellow-500" />
           <span className="text-xs text-zinc-400 dark:text-zinc-500">
             {formatDisplayDateTime(record.recordedAt)}
           </span>
@@ -44,16 +44,16 @@ export function LuckRecordCard({ record, onUpdate, onDelete }: Props) {
           <button
             onClick={() => setIsEditing(true)}
             title="編集"
-            className="rounded-md p-1 text-zinc-500 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="rounded-md p-1 text-amber-500 transition-colors hover:bg-amber-50 dark:hover:bg-zinc-800"
           >
-            <Pencil size={14} />
+            <Pencil size={14} strokeWidth={3} />
           </button>
           <button
             onClick={() => setIsConfirmingDelete(true)}
             title="削除"
-            className="rounded-md p-1 text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
+            className="rounded-md p-1 text-orange-500 transition-colors hover:bg-orange-50 dark:hover:bg-orange-950"
           >
-            <Trash2 size={14} />
+            <Trash2 size={14} strokeWidth={3} />
           </button>
         </div>
       </div>

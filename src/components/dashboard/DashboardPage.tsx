@@ -64,7 +64,7 @@ function RecentPostItem({ post }: { post: TimelinePost }) {
     <div className="flex flex-col gap-1 rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800/50">
       <div className="flex items-center justify-between">
         <span className="text-xs text-zinc-400">{date}</span>
-        {(() => { const Icon = MOOD_ICONS[post.moodScore]; return Icon ? <Icon size={16} className="text-zinc-400" /> : null; })()}
+        {(() => { const Icon = MOOD_ICONS[post.moodScore]; return Icon ? <Icon size={16} strokeWidth={3} className="text-zinc-400" /> : null; })()}
       </div>
       <p className="line-clamp-2 text-sm text-zinc-700 dark:text-zinc-300">{post.content}</p>
     </div>
@@ -106,7 +106,7 @@ function QuickButton({ href, label, Icon }: { href: string; label: string; Icon:
       href={href}
       className="flex flex-1 flex-col items-center gap-1 rounded-xl border border-zinc-200 bg-white px-2 py-3 text-center transition-colors hover:bg-zinc-50 active:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
     >
-      <Icon size={24} className="text-zinc-600 dark:text-zinc-300" />
+      <Icon size={24} strokeWidth={3} className="text-orange-500 dark:text-orange-400" />
       <span className="text-xs text-zinc-600 dark:text-zinc-300">{label}</span>
     </Link>
   );
