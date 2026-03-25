@@ -1,20 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import type { CreateHabitInput, Habit } from "@/lib/types";
+import type { CreateHabitInput, Habit, HabitStartLog } from "@/lib/types";
 import { HabitForm } from "./HabitForm";
 import { HabitWeeklySummary } from "./HabitWeeklySummary";
+import { toTokyoYmd, toTokyoHHmm } from "@/lib/datetime";
 
 
 type Props = {
   habit: Habit;
+  logs: HabitStartLog[];
   onUpdate: (id: string, patch: Partial<CreateHabitInput>) => void;
   onDelete: (id: string) => void;
   onToggleActive: (id: string, isActive: boolean) => void;
   onLogStart: (habitId: string, note: string | null) => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
 };
 
-export function HabitCard({ habit, onUpdate, onDelete, onToggleActive, onLogStart }: Props) {
+export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onLogStart, canMoveUp, canMoveDown, onMoveUp, onMoveDown }: Props) {
   const [editing, setEditing] = useState(false);
   const [showWeekly, setShowWeekly] = useState(false);
   const [showNoteInput, setShowNoteInput] = useState(false);
@@ -73,6 +79,21 @@ export function HabitCard({ habit, onUpdate, onDelete, onToggleActive, onLogStar
           >
             {habit.isActive ? "有効" : "無効"}
           </button>
+          {habit.isActive && (
+            <>
+              <button
+                onClick={onMoveUp}
+                disabled={!canMoveUp}
+                className="rounded px-1.5 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
+              >↑</button>
+              <button
+                onClick={onMoveDown}
+                disabled={!canMoveDown}
+                className="rounded px-1.5 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 disabled:opacity-30 dark:hover:text-zinc-200"
+              >↓</button>
+            </>
+          )}
+
           <button
             onClick={() => setShowWeekly((prev) => !prev)}
             className="rounded px-2 py-0.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
@@ -140,6 +161,23 @@ export function HabitCard({ habit, onUpdate, onDelete, onToggleActive, onLogStar
               </button>
             </div>
           )}
+          {/* 今日の開始記録 */}
+          {(() => {
+            const todayYmd = toTokyoYmd(new Date().toISOString());
+            const todayLogs = logs
+              .filter((l) => toTokyoYmd(l.startedAt) === todayYmd)
+              .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+            if (todayLogs.length === 0) return null;
+            return (
+              <div className="flex flex-wrap gap-1">
+                {todayLogs.map((l) => (
+                  <span key={l.id} className="rounded bg-emerald-50 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                    {toTokyoHHmm(l.startedAt)}{l.note ? ` (${l.note})` : ""}
+                  </span>
+                ))}
+              </div>
+            );
+          })()}
           {showWeekly && <HabitWeeklySummary habitId={habit.id} />}
         </div>
       )}
