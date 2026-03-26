@@ -87,7 +87,7 @@ export function TimelinePostForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 border border-zinc-900 bg-[#f0ede6] p-4"
+      className="flex flex-col gap-4 border border-zinc-200 bg-white p-4"
     >
       {/* 気分スコア */}
       <div className="flex flex-col gap-1">

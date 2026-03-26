@@ -29,7 +29,7 @@ export function HabitForm({ initialValues, onSubmit, onCancel }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 border border-zinc-900 bg-[#f0ede6] p-4"
+      className="flex flex-col gap-3 border border-zinc-200 bg-white p-4"
     >
       <div className="flex flex-col gap-1">
         <label className="text-xs font-medium text-zinc-600">

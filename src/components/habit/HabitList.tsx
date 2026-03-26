@@ -115,7 +115,7 @@ export function HabitList({ habits, logs, onUpdate, onReorder, onDelete, onToggl
   }
 
   return (
-    <div ref={listRef} className="flex flex-col gap-3">
+    <div ref={listRef} className="flex flex-col gap-2">
       {habits.map((habit, index) => (
         <div
           key={habit.id}

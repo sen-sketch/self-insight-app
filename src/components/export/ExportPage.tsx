@@ -226,7 +226,7 @@ export function ExportPage() {
             readOnly
             value={outputText}
             rows={20}
-            className="w-full border border-zinc-900 bg-[#f0ede6] text-zinc-900 text-sm font-mono p-3 resize-y focus:outline-none"
+            className="w-full border border-zinc-200 bg-white text-zinc-900 text-sm font-mono p-3 resize-y focus:outline-none"
           />
         </section>
       )}

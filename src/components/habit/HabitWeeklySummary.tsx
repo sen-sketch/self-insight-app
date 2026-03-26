@@ -73,7 +73,7 @@ export function HabitWeeklySummary({ habitId }: Props) {
   })();
 
   return (
-    <div className="mt-3 border border-zinc-900 bg-[#f0ede6] px-3 py-2">
+    <div className="mt-3 border border-zinc-200 bg-white px-3 py-2">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-medium text-zinc-500">直近7日</span>
         <div className="flex items-center gap-2 text-xs">

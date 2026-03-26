@@ -18,7 +18,7 @@ export function LuckDateFilter({
   const hasFilter = fromDate || toDate;
 
   return (
-    <div className="flex flex-col gap-3 border border-zinc-900 bg-[#f0ede6] p-3">
+    <div className="flex flex-col gap-3 p-1">
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium text-zinc-500">絞り込み</span>
         {hasFilter && (
@@ -34,7 +34,7 @@ export function LuckDateFilter({
           value={fromDate}
           onChange={(e) => onFromDateChange(e.target.value)}
           aria-label="開始日"
-          className="flex-1 border border-zinc-900 bg-transparent px-2 py-1.5 text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+          className="flex-1 border border-zinc-900 bg-transparent px-2 py-1.5 text-center text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016] [&::-webkit-datetime-edit]:text-center [&::-webkit-datetime-edit-fields-wrapper]:w-full"
         />
         <span className="text-xs text-zinc-400">〜</span>
         <input
@@ -42,7 +42,7 @@ export function LuckDateFilter({
           value={toDate}
           onChange={(e) => onToDateChange(e.target.value)}
           aria-label="終了日"
-          className="flex-1 border border-zinc-900 bg-transparent px-2 py-1.5 text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+          className="flex-1 border border-zinc-900 bg-transparent px-2 py-1.5 text-center text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016] [&::-webkit-datetime-edit]:text-center [&::-webkit-datetime-edit-fields-wrapper]:w-full"
         />
       </div>
     </div>

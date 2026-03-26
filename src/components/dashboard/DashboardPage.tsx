@@ -41,7 +41,7 @@ type SummaryCardProps = {
 
 function SummaryCard({ label, value }: SummaryCardProps) {
   return (
-    <div className="flex flex-col border border-zinc-900 bg-[#f0ede6] px-4 py-3">
+    <div className="flex flex-col border border-zinc-200 bg-white px-4 py-3">
       <span className="text-xs font-bold uppercase tracking-widest text-zinc-500">{label}</span>
       <span className="mt-1 text-3xl font-black text-zinc-900">{value}</span>
     </div>

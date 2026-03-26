@@ -62,16 +62,16 @@ export function HabitPage() {
 
 
   return (
-    <div className="flex flex-col gap-4 px-4 py-6">
-      <div className="relative flex items-center">
-        <h1 className="w-full text-center text-lg font-black text-zinc-900">
+    <div className="flex flex-col gap-3 px-4 py-5">
+      <div className="relative flex items-center py-1">
+        <h1 className="w-full text-center text-base font-bold text-zinc-900">
           習慣トラッカー
         </h1>
         <button
           onClick={() => setShowForm((prev) => !prev)}
-          className="absolute right-0 border border-zinc-900 bg-[#3d5016] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-[#4a6320]"
+          className="absolute right-0 border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-800"
         >
-          {showForm ? "閉じる" : "+ タスク追加"}
+          {showForm ? "閉じる" : "+ 追加"}
         </button>
       </div>
 

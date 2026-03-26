@@ -51,143 +51,146 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
 
   return (
     <div
-      className={`border p-4 transition-opacity ${
-        habit.isActive
-          ? "border-zinc-900 bg-[#f0ede6]"
-          : "border-zinc-900 bg-[#f0ede6] opacity-60"
+      className={`border border-zinc-200 bg-white p-3 transition-opacity ${
+        !habit.isActive ? "opacity-50" : ""
       }`}
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex flex-col gap-0.5">
-          {!habit.isActive && (
-            <span className="text-sm font-medium text-zinc-900">{habit.name}</span>
-          )}
+      {/* Row 1: 主情報（習慣名 + 開始ボタン） */}
+      <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="truncate text-sm font-semibold text-zinc-900">{habit.name}</span>
           {habit.targetStartTime && (
             <span className="text-xs text-zinc-400">目標: {habit.targetStartTime}</span>
           )}
         </div>
-        <div className="flex shrink-0 items-center gap-1">
+        {habit.isActive && (
           <button
-            onClick={() => setShowWeekly((prev) => !prev)}
-            title="週次サマリー"
-            className="px-1.5 py-0.5 text-zinc-600 hover:text-zinc-900"
+            onClick={() => onLogStart(habit.id, null)}
+            className="shrink-0 bg-[#3d5016] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#4a6320] active:bg-[#2e3d10]"
           >
-            <BarChart2 size={14} strokeWidth={3} />
+            開始
           </button>
-
-          {!actionsExpanded ? (
-            <button
-              onClick={() => setActionsExpanded(true)}
-              title="編集"
-              className="px-1.5 py-0.5 text-[#3d5016] hover:text-zinc-900"
-            >
-              <Pencil size={14} strokeWidth={3} />
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={() => setEditing(true)}
-                title="フォームで編集"
-                className="px-1.5 py-0.5 text-[#3d5016] hover:text-zinc-900"
-              >
-                <Pencil size={14} strokeWidth={3} />
-              </button>
-              <button
-                onClick={() => {
-                  if (confirm(`「${habit.name}」を削除しますか？`)) onDelete(habit.id);
-                }}
-                title="削除"
-                className="px-1.5 py-0.5 text-zinc-600 hover:text-zinc-900"
-              >
-                <Trash2 size={14} strokeWidth={3} />
-              </button>
-              <button
-                onClick={() => setActionsExpanded(false)}
-                title="閉じる"
-                className="px-1.5 py-0.5 text-zinc-400 hover:text-zinc-900"
-              >
-                <X size={14} strokeWidth={3} />
-              </button>
-            </>
-          )}
-        </div>
+        )}
       </div>
 
-      <div className="mt-3 flex flex-col gap-2">
-        {habit.isActive && showNoteInput ? (
-          <>
-            <input
-              type="text"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="補足メモ（任意）"
-              autoFocus
-              className="border border-zinc-900 bg-transparent px-3 py-1.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={handleConfirmNote}
-                className="flex-1 border border-zinc-900 bg-[#3d5016] py-1.5 text-sm font-bold text-white hover:bg-[#4a6320]"
-              >
-                記録する
-              </button>
-              <button
-                onClick={() => { setShowNoteInput(false); setNote(""); }}
-                className="px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-700"
-              >
-                キャンセル
-              </button>
-            </div>
-          </>
-        ) : (
+      {/* メモ入力（展開時） */}
+      {habit.isActive && showNoteInput && (
+        <div className="mt-2 flex flex-col gap-2">
+          <input
+            type="text"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="補足メモ（任意）"
+            autoFocus
+            className="border border-zinc-200 bg-transparent px-3 py-1.5 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#3d5016]"
+          />
           <div className="flex gap-2">
-            {habit.isActive && (
-              <>
-                <button
-                  onClick={() => onLogStart(habit.id, null)}
-                  className="flex-1 border border-zinc-900 bg-[#3d5016] py-1.5 text-sm font-bold text-white hover:bg-[#4a6320]"
-                >
-                  {habit.name}　開始
-                </button>
-                <button
-                  onClick={() => setShowNoteInput(true)}
-                  className="border border-zinc-900 px-3 py-1.5 text-xs text-zinc-500 hover:bg-zinc-200"
-                >
-                  メモ
-                </button>
-              </>
-            )}
             <button
-              onClick={() => onToggleActive(habit.id, !habit.isActive)}
-              className={`px-2 py-0.5 text-xs font-medium border ${
-                habit.isActive
-                  ? "border-[#3d5016] text-[#3d5016]"
-                  : "border-zinc-400 text-zinc-500"
-              }`}
+              onClick={handleConfirmNote}
+              className="flex-1 bg-[#3d5016] py-1.5 text-sm font-bold text-white hover:bg-[#4a6320]"
             >
-              {habit.isActive ? "有効" : "無効"}
+              記録する
+            </button>
+            <button
+              onClick={() => { setShowNoteInput(false); setNote(""); }}
+              className="px-3 py-1.5 text-sm text-zinc-400 hover:text-zinc-600"
+            >
+              キャンセル
             </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {habit.isActive && (() => {
-          const todayYmd = toTokyoYmd(new Date().toISOString());
-          const todayLogs = logs
-            .filter((l) => toTokyoYmd(l.startedAt) === todayYmd)
-            .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
-          if (todayLogs.length === 0) return null;
-          return (
-            <div className="flex flex-wrap gap-1">
-              {todayLogs.map((l) => (
-                <span key={l.id} className="border border-[#3d5016] px-2 py-0.5 text-xs text-[#3d5016]">
-                  {toTokyoHHmm(l.startedAt)}{l.note ? ` (${l.note})` : ""}
-                </span>
-              ))}
-            </div>
-          );
-        })()}
-        {habit.isActive && showWeekly && <HabitWeeklySummary habitId={habit.id} />}
+      {/* Row 2: 操作群（メモ・有効/無効・グラフ・編集） */}
+      <div className="mt-2 flex items-center gap-1">
+        {habit.isActive && !showNoteInput && (
+          <button
+            onClick={() => setShowNoteInput(true)}
+            className="border border-zinc-200 px-2.5 py-1 text-xs text-zinc-500 hover:bg-zinc-100"
+          >
+            メモ
+          </button>
+        )}
+        <button
+          onClick={() => onToggleActive(habit.id, !habit.isActive)}
+          className={`border px-2.5 py-1 text-xs font-medium ${
+            habit.isActive
+              ? "border-zinc-200 text-zinc-500"
+              : "border-zinc-200 text-zinc-400"
+          }`}
+        >
+          {habit.isActive ? "有効" : "無効"}
+        </button>
+
+        <div className="flex-1" />
+
+        <button
+          onClick={() => setShowWeekly((prev) => !prev)}
+          title="週次サマリー"
+          className={`p-1.5 hover:text-zinc-700 ${showWeekly ? "text-zinc-700" : "text-zinc-400"}`}
+        >
+          <BarChart2 size={14} strokeWidth={1.5} />
+        </button>
+
+        {!actionsExpanded ? (
+          <button
+            onClick={() => setActionsExpanded(true)}
+            title="編集"
+            className="p-1.5 text-zinc-400 hover:text-zinc-700"
+          >
+            <Pencil size={14} strokeWidth={1.5} />
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={() => setEditing(true)}
+              title="フォームで編集"
+              className="p-1.5 text-zinc-500 hover:text-zinc-800"
+            >
+              <Pencil size={14} strokeWidth={1.5} />
+            </button>
+            <button
+              onClick={() => {
+                if (confirm(`「${habit.name}」を削除しますか？`)) onDelete(habit.id);
+              }}
+              title="削除"
+              className="p-1.5 text-zinc-400 hover:text-red-500"
+            >
+              <Trash2 size={14} strokeWidth={1.5} />
+            </button>
+            <button
+              onClick={() => setActionsExpanded(false)}
+              title="閉じる"
+              className="p-1.5 text-zinc-300 hover:text-zinc-600"
+            >
+              <X size={14} strokeWidth={1.5} />
+            </button>
+          </>
+        )}
       </div>
+
+      {/* 時刻チップ */}
+      {habit.isActive && (() => {
+        const todayYmd = toTokyoYmd(new Date().toISOString());
+        const todayLogs = logs
+          .filter((l) => toTokyoYmd(l.startedAt) === todayYmd)
+          .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+        if (todayLogs.length === 0) return null;
+        return (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {todayLogs.map((l) => (
+              <span
+                key={l.id}
+                className="bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-500"
+              >
+                {toTokyoHHmm(l.startedAt)}{l.note ? ` · ${l.note}` : ""}
+              </span>
+            ))}
+          </div>
+        );
+      })()}
+
+      {habit.isActive && showWeekly && <HabitWeeklySummary habitId={habit.id} />}
     </div>
   );
 }

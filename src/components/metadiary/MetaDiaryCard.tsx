@@ -13,7 +13,7 @@ export function MetaDiaryCard({ diary, onDelete }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
-    <div className="flex flex-col gap-3 border border-zinc-900 bg-[#f0ede6] p-4">
+    <div className="flex flex-col gap-3 border border-zinc-200 bg-white p-4">
       <div className="flex items-center justify-between">
         <span className="text-sm font-semibold text-[#3d5016]">
           {diary.diaryDate}

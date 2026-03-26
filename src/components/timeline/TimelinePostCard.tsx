@@ -41,7 +41,7 @@ export function TimelinePostCard({ post, onUpdate, onDelete }: Props) {
     }
 
     return(
-        <div className="flex flex-col gap-2 border border-zinc-900 bg-[#f0ede6] p-4">
+        <div className="flex flex-col gap-2 border border-zinc-200 bg-white p-4">
             {/* ヘッダー */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
