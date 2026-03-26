@@ -121,7 +121,7 @@ export function ExportPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-      <h1 className="text-xl font-black text-zinc-900">エクスポート</h1>
+      <h1 className="w-full text-center text-xl font-black text-zinc-900">エクスポート</h1>
 
       {/* ステップ1：期間選択UI */}
       <section className="space-y-3">

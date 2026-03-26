@@ -150,7 +150,7 @@ export function DashboardPage() {
     <div className="mx-auto w-full max-w-md flex flex-col gap-6 py-2">
       {/* ヘッダー */}
       <div>
-        <h1 className="text-xl font-black text-zinc-900">ダッシュボード</h1>
+        <h1 className="text-xl font-black text-zinc-900 text-center w-full">ダッシュボード</h1>
         <p className="text-sm text-zinc-500">{today}</p>
       </div>
 
