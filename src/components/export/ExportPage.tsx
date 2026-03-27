@@ -141,7 +141,7 @@ export function ExportPage() {
             onClick={generatePosts}
             className="w-full border border-zinc-900 bg-[#3d5016] py-2.5 text-white font-bold hover:bg-[#4a6320] transition-colors"
           >
-            統合記録を出力
+            出力
           </button>
         </div>
       </section>
