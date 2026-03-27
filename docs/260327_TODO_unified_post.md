@@ -102,10 +102,10 @@
 
 ## Phase 7: タイムライン画面の更新
 
-- [ ] `src/app/timeline/page.tsx` → `getPosts()` を参照するよう変更
-- [ ] `TimelinePostForm.tsx` を `UnifiedPostForm` に差し替え
-- [ ] `TimelinePostCard.tsx` を `PostCard` に差し替え
-- [ ] フィルタ・ソート機能は維持
+- [x] `src/app/timeline/page.tsx` → `getPosts()` を参照するよう変更
+- [x] `TimelinePostForm.tsx` を `UnifiedPostForm` に差し替え
+- [x] `TimelinePostCard.tsx` を `PostCard` に差し替え
+- [x] フィルタ・ソート機能は維持
 
 ---
 
