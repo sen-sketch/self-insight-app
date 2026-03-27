@@ -60,7 +60,7 @@
 
 ## Phase 4: 統合投稿フォーム (`src/components/post/`)
 
-- [ ] `UnifiedPostForm.tsx` を新設
+- [x] `UnifiedPostForm.tsx` を新設
   - 気分スコア選択（任意、デフォルト未選択）
   - 「何をしたか」テキスト（任意）
   - 「結果・気づき」テキスト（任意）
@@ -69,8 +69,8 @@
   - 自由タグ入力
   - 日時ピッカー（デフォルト現在時刻、変更可）
   - 送信ボタン
-- [ ] `PostCard.tsx` を新設（統合投稿の1件表示）
-- [ ] `PostList.tsx` を新設（投稿一覧表示）
+- [x] `PostCard.tsx` を新設（統合投稿の1件表示）
+- [x] `PostList.tsx` を新設（投稿一覧表示）
 
 ---
 
