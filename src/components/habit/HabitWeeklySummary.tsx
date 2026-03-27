@@ -85,7 +85,7 @@ export function HabitWeeklySummary({ habitId }: Props) {
           {directionNode}
         </div>
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" onTouchStart={(e) => e.stopPropagation()}>
         <div className="min-w-[280px]">
           <HabitStartDotPlot entries={stats.currentWeek} />
         </div>
