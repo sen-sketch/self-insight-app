@@ -48,13 +48,13 @@
 
 ## Phase 3: データマイグレーション (`src/lib/migration.ts`)
 
-- [ ] 既存 localStorage データを `Post` 形式に変換する関数を作成
+- [x] 既存 localStorage データを `Post` 形式に変換する関数を作成
   - `TimelinePost` → `Post`（`content` → `whatText`、`tags` → `freeTags`）
   - `LuckRecord` → `Post`（`challengeText` → `whatText`、`emotionText` → `resultText`、`insightText` → `questionText`）
   - `MetaDiary` → `Post`（`goalText` + `actualText` を `whatText` に結合、`tomorrowPlanText` → `questionText`）
   - `HabitStartLog` → `Post`（`habitId` → `habitTags`、`note` → `whatText`）
-- [ ] アプリ初回起動時に一度だけ移行を実行する仕組みを実装（`sia:migrated_v2` フラグ）
-- [ ] 移行後も旧キーのデータは保持（しばらくバックアップとして残す）
+- [x] アプリ初回起動時に一度だけ移行を実行する仕組みを実装（`sia:migrated_v2` フラグ）
+- [x] 移行後も旧キーのデータは保持（しばらくバックアップとして残す）
 
 ---
 
