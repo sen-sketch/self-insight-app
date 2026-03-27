@@ -1,10 +1,8 @@
 import type {
-  CreateLuckRecordInput,
-  CreateTimelinePostInput,
-  UpsertMetaDiaryInput,
-  UpdateLuckRecordInput,
-  UpdateTimelinePostInput,
+  CreatePostInput,
+  UpdatePostInput,
 } from "@/lib/types";
+
 
 export class ValidationError extends Error {
   field: string;
@@ -64,131 +62,48 @@ export function normalizeTags(tags: string[]): string[] {
   return [...new Set(trimmedTags)];
 }
 
-export function validateTimelinePostInput(
-  input: CreateTimelinePostInput
-): CreateTimelinePostInput {
-  assertNonEmptyString(
-    input.content,
-    "content",
-    VALIDATION_MESSAGES.timelineContentRequired
-  );
-  assertMoodScore(input.moodScore);
+
+export function validatePostInput(
+  input: CreatePostInput
+): CreatePostInput {
+  if (input.moodScore !== null) {
+    assertMoodScore(input.moodScore);
+  }
 
   return {
     ...input,
-    content: input.content.trim(),
-    tags: normalizeTags(input.tags),
+    whatText: input.whatText?.trim() || null,
+    resultText: input.resultText?.trim() || null,
+    questionText: input.questionText?.trim() || null,
+    habitTags: [...new Set(input.habitTags)],
+    freeTags: normalizeTags(input.freeTags),
   };
 }
 
-export function validateTimelinePostPatch(
-  patch: UpdateTimelinePostInput
-): UpdateTimelinePostInput {
+export function validatePostPatch(
+  patch: UpdatePostInput
+): UpdatePostInput {
   const nextPatch = { ...patch };
 
-  if (nextPatch.content !== undefined) {
-    assertNonEmptyString(
-      nextPatch.content,
-      "content",
-      VALIDATION_MESSAGES.timelineContentRequired
-    );
-    nextPatch.content = nextPatch.content.trim();
-  }
-
-  if (nextPatch.moodScore !== undefined) {
+  if (nextPatch.moodScore !== undefined && nextPatch.moodScore !== null) {
     assertMoodScore(nextPatch.moodScore);
   }
 
-  if (nextPatch.tags !== undefined) {
-    nextPatch.tags = normalizeTags(nextPatch.tags);
+  if (nextPatch.whatText !== undefined) {
+    nextPatch.whatText = nextPatch.whatText?.trim() || null;
+  }
+  if (nextPatch.resultText !== undefined) {
+    nextPatch.resultText = nextPatch.resultText?.trim() || null;
+  }
+  if (nextPatch.questionText !== undefined) {
+    nextPatch.questionText = nextPatch.questionText?.trim() || null;
+  }
+  if (nextPatch.habitTags !== undefined) {
+    nextPatch.habitTags = [...new Set(nextPatch.habitTags)];
+  }
+  if (nextPatch.freeTags !== undefined) {
+    nextPatch.freeTags = normalizeTags(nextPatch.freeTags);
   }
 
   return nextPatch;
-}
-
-export function validateLuckRecordInput(
-  input: CreateLuckRecordInput
-): CreateLuckRecordInput {
-  assertNonEmptyString(
-    input.challengeText,
-    "challengeText",
-    VALIDATION_MESSAGES.luckChallengeRequired
-  );
-  assertNonEmptyString(
-    input.emotionText,
-    "emotionText",
-    VALIDATION_MESSAGES.luckEmotionRequired
-  );
-
-  return {
-    ...input,
-    challengeText: input.challengeText.trim(),
-    emotionText: input.emotionText.trim(),
-    insightText: input.insightText?.trim() || null,
-    nextActionText: input.nextActionText?.trim() || null,
-  };
-}
-
-export function validateLuckRecordPatch(
-  patch: UpdateLuckRecordInput
-): UpdateLuckRecordInput {
-  const nextPatch = { ...patch };
-
-  if (nextPatch.challengeText !== undefined) {
-    assertNonEmptyString(
-      nextPatch.challengeText,
-      "challengeText",
-      VALIDATION_MESSAGES.luckChallengeRequired
-    );
-    nextPatch.challengeText = nextPatch.challengeText.trim();
-  }
-
-  if (nextPatch.emotionText !== undefined) {
-    assertNonEmptyString(
-      nextPatch.emotionText,
-      "emotionText",
-      VALIDATION_MESSAGES.luckEmotionRequired
-    );
-    nextPatch.emotionText = nextPatch.emotionText.trim();
-  }
-
-  if (nextPatch.insightText !== undefined) {
-    nextPatch.insightText = nextPatch.insightText?.trim() || null;
-  }
-
-  if (nextPatch.nextActionText !== undefined) {
-    nextPatch.nextActionText = nextPatch.nextActionText?.trim() || null;
-  }
-
-  return nextPatch;
-}
-
-export function validateMetaDiaryInput(
-  diaryDate: string,
-  input: UpsertMetaDiaryInput
-): UpsertMetaDiaryInput {
-  assertIsoDateString(diaryDate, "diaryDate");
-  assertNonEmptyString(
-    input.goalText,
-    "goalText",
-    VALIDATION_MESSAGES.metaGoalRequired
-  );
-  assertNonEmptyString(
-    input.actualText,
-    "actualText",
-    VALIDATION_MESSAGES.metaActualRequired
-  );
-  assertNonEmptyString(
-    input.tomorrowPlanText,
-    "tomorrowPlanText",
-    VALIDATION_MESSAGES.metaTomorrowRequired
-  );
-
-  return {
-    ...input,
-    goalText: input.goalText.trim(),
-    actualText: input.actualText.trim(),
-    blockedPointsText: input.blockedPointsText?.trim() || null,
-    tomorrowPlanText: input.tomorrowPlanText.trim(),
-  };
 }

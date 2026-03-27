@@ -1,36 +1,25 @@
 import type {
   CreateHabitInput,
-  CreateHabitStartLogInput,
-  CreateLuckRecordInput,
-  CreateTimelinePostInput,
-  TimelinePost,
+  CreatePostInput,
+  Post,
   Habit,
   HabitStartLog,
-  LuckRecord,
-  MetaDiary,
-  UpsertMetaDiaryInput,
   UpdateHabitInput,
-  UpdateLuckRecordInput,
-  UpdateTimelinePostInput,
+  UpdatePostInput,
 } from "@/lib/types";
 import {
-  validateLuckRecordInput,
-  validateLuckRecordPatch,
-  validateMetaDiaryInput,
-  validateTimelinePostInput,
-  validateTimelinePostPatch,
+  validatePostInput,
+  validatePostPatch,
 } from "@/lib/validation";
 
-// ─── キー定義 ─────────────────────────────────────────────
 
+// ─── キー定義 ─────────────────────────────────────────────
 const KEYS = {
   currentUserId: "sia:current_user_id",
-  timelinePosts: "sia:timeline_posts",
+  posts: "sia:posts",
   habits: "sia:habits",
-  habitStartLogs: "sia:habit_start_logs",
-  luckRecords: "sia:luck_records",
-  metaDiaries: "sia:meta_diaries",
 } as const;
+
 
 // ─── 内部ユーティリティ ───────────────────────────────────
 
@@ -102,9 +91,6 @@ function byIsoDateDesc<T>(
   return String(right[field]).localeCompare(String(left[field]));
 }
 
-function readAllTimelinePosts(): TimelinePost[] {
-  return load<TimelinePost>(KEYS.timelinePosts).map((post) => withUserId(post));
-}
 
 function readAllHabits(): Habit[] {
   return load<Habit>(KEYS.habits).map((habit, index) =>
@@ -115,25 +101,6 @@ function readAllHabits(): Habit[] {
   );
 }
 
-
-function readAllHabitStartLogs(): HabitStartLog[] {
-  return load<HabitStartLog>(KEYS.habitStartLogs).map((log) => withUserId(log));
-}
-
-function readAllLuckRecords(): LuckRecord[] {
-  return load<LuckRecord>(KEYS.luckRecords).map((record) => withUserId(record));
-}
-
-function readAllMetaDiaries(): MetaDiary[] {
-  return load<MetaDiary>(KEYS.metaDiaries).map((diary) => withUserId(diary));
-}
-
-function getMetaDiariesByDate(diaryDate: string): MetaDiary[] {
-  const currentUserId = getCurrentUserId();
-  return readAllMetaDiaries().filter(
-    (d) => d.userId === currentUserId && d.diaryDate === diaryDate
-  );
-}
 
 function filterByCurrentUser<T extends { userId: string }>(records: T[]): T[] {
   const currentUserId = getCurrentUserId();
@@ -151,54 +118,50 @@ function replaceCurrentUserRecords<T extends { id: string; userId: string }>(
   return [...otherUsersRecords, ...currentUserRecords];
 }
 
-// ─── タイムライン投稿 ─────────────────────────────────────
+// ─── 統合投稿 ──────────────────────────────────────────────
 
-export function getTimelinePosts(): TimelinePost[] {
-  return filterByCurrentUser(readAllTimelinePosts()).sort((left, right) =>
+function readAllPosts(): Post[] {
+  return load<Post>(KEYS.posts).map((post) => withUserId(post));
+}
+
+export function getPosts(): Post[] {
+  return filterByCurrentUser(readAllPosts()).sort((left, right) =>
     byIsoDateDesc(left, right, "postedAt")
   );
 }
 
-export function addTimelinePost(
-  draft: CreateTimelinePostInput
-): TimelinePost {
-  const validatedDraft = validateTimelinePostInput(draft);
+export function addPost(draft: CreatePostInput): Post {
+  const validatedDraft = validatePostInput(draft);
 
-  const allPosts = readAllTimelinePosts();
+  const allPosts = readAllPosts();
   const posts = filterByCurrentUser(allPosts);
-  const record: TimelinePost = {
+  const record: Post = {
     ...validatedDraft,
     id: newId(),
     userId: getCurrentUserId(),
     createdAt: now(),
     updatedAt: now(),
   };
-  save(
-    KEYS.timelinePosts,
-    replaceCurrentUserRecords(allPosts, [record, ...posts])
-  );
+  save(KEYS.posts, replaceCurrentUserRecords(allPosts, [record, ...posts]));
   return record;
 }
 
-export function updateTimelinePost(
-  id: string,
-  patch: UpdateTimelinePostInput
-): void {
-  const validatedPatch = validateTimelinePostPatch(patch);
+export function updatePost(id: string, patch: UpdatePostInput): void {
+  const validatedPatch = validatePostPatch(patch);
 
-  const allPosts = readAllTimelinePosts();
+  const allPosts = readAllPosts();
   const posts = filterByCurrentUser(allPosts).map((p) =>
     p.id === id && p.userId === getCurrentUserId()
       ? { ...p, ...validatedPatch, updatedAt: now() }
       : p
   );
-  save(KEYS.timelinePosts, replaceCurrentUserRecords(allPosts, posts));
+  save(KEYS.posts, replaceCurrentUserRecords(allPosts, posts));
 }
 
-export function deleteTimelinePost(id: string): void {
-  const allPosts = readAllTimelinePosts();
+export function deletePost(id: string): void {
+  const allPosts = readAllPosts();
   const posts = filterByCurrentUser(allPosts).filter((p) => p.id !== id);
-  save(KEYS.timelinePosts, replaceCurrentUserRecords(allPosts, posts));
+  save(KEYS.posts, replaceCurrentUserRecords(allPosts, posts));
 }
 
 // ─── 習慣タスク ────────────────────────────────────────────
@@ -334,138 +297,21 @@ export function deleteHabit(id: string): void {
 }
 
 // ─── 習慣開始記録 ──────────────────────────────────────────
-
 export function getHabitStartLogs(): HabitStartLog[] {
-  return filterByCurrentUser(readAllHabitStartLogs()).sort((left, right) =>
-    byIsoDateDesc(left, right, "startedAt")
-  );
-}
-
-export function addHabitStartLog(
-  draft: CreateHabitStartLogInput
-): HabitStartLog {
-  const allLogs = readAllHabitStartLogs();
-  const logs = filterByCurrentUser(allLogs);
-  const record: HabitStartLog = {
-    ...draft,
-    id: newId(),
-    userId: getCurrentUserId(),
-    createdAt: now(),
-  };
-  save(KEYS.habitStartLogs, replaceCurrentUserRecords(allLogs, [record, ...logs]));
-  return record;
-}
-
-// ─── 運を上げる記録 ────────────────────────────────────────
-
-export function getLuckRecords(): LuckRecord[] {
-  return filterByCurrentUser(readAllLuckRecords()).sort((left, right) =>
-    byIsoDateDesc(left, right, "recordedAt")
-  );
-}
-
-export function addLuckRecord(
-  draft: CreateLuckRecordInput
-): LuckRecord {
-  const validatedDraft = validateLuckRecordInput(draft);
-
-  const allRecords = readAllLuckRecords();
-  const records = filterByCurrentUser(allRecords);
-  const record: LuckRecord = {
-    ...validatedDraft,
-    id: newId(),
-    userId: getCurrentUserId(),
-    createdAt: now(),
-    updatedAt: now(),
-  };
-  save(
-    KEYS.luckRecords,
-    replaceCurrentUserRecords(allRecords, [record, ...records])
-  );
-  return record;
-}
-
-export function updateLuckRecord(
-  id: string,
-  patch: UpdateLuckRecordInput
-): void {
-  const validatedPatch = validateLuckRecordPatch(patch);
-
-  const allRecords = readAllLuckRecords();
-  const records = filterByCurrentUser(allRecords).map((r) =>
-    r.id === id && r.userId === getCurrentUserId()
-      ? { ...r, ...validatedPatch, updatedAt: now() }
-      : r
-  );
-  save(KEYS.luckRecords, replaceCurrentUserRecords(allRecords, records));
-}
-
-export function deleteLuckRecord(id: string): void {
-  const allRecords = readAllLuckRecords();
-  const records = filterByCurrentUser(allRecords).filter((r) => r.id !== id);
-  save(KEYS.luckRecords, replaceCurrentUserRecords(allRecords, records));
-}
-
-// ─── メタ認知日記 ──────────────────────────────────────────
-
-export function getMetaDiaries(): MetaDiary[] {
-  return filterByCurrentUser(readAllMetaDiaries()).sort((left, right) =>
-    byIsoDateDesc(left, right, "diaryDate")
-  );
-}
-
-/** diaryDate が同じ日記があれば返す */
-export function getMetaDiaryByDate(diaryDate: string): MetaDiary | null {
-  return getMetaDiariesByDate(diaryDate)[0] ?? null;
-}
-
-
-
-/** 当日分がなければ作成、あれば更新（upsert） */
-export function upsertMetaDiary(
-  diaryDate: string,
-  patch: UpsertMetaDiaryInput
-): MetaDiary {
-  const validatedPatch = validateMetaDiaryInput(diaryDate, patch);
-
-  const allDiaries = readAllMetaDiaries();
-  const currentUserDiaries = filterByCurrentUser(allDiaries);
-  const sameDateDiaries = currentUserDiaries.filter((d) => d.diaryDate === diaryDate);
-
-  if (sameDateDiaries.length > 0) {
-    const base = sameDateDiaries[0];
-    const updated: MetaDiary = {
-      ...base,
-      ...validatedPatch,
-      diaryDate,
-      updatedAt: now(),
-    };
-
-    const diaries = [
-      updated,
-      ...currentUserDiaries.filter((d) => d.diaryDate !== diaryDate),
-    ];
-
-    save(KEYS.metaDiaries, replaceCurrentUserRecords(allDiaries, diaries));
-    return updated;
+  const posts = getPosts();
+  const logs: HabitStartLog[] = [];
+  for (const post of posts) {
+    for (const habitId of post.habitTags) {
+      logs.push({
+        id: `${post.id}:${habitId}`,
+        userId: post.userId,
+        habitId,
+        startedAt: post.postedAt,
+        note: post.whatText ?? null,
+        createdAt: post.createdAt,
+      });
+    }
   }
-
-  const record: MetaDiary = {
-    ...validatedPatch,
-    id: newId(),
-    userId: getCurrentUserId(),
-    diaryDate,
-    createdAt: now(),
-    updatedAt: now(),
-  };
-
-  save(KEYS.metaDiaries, replaceCurrentUserRecords(allDiaries, [record, ...currentUserDiaries]));
-  return record;
-
+  return logs.sort((a, b) => byIsoDateDesc(a, b, "startedAt"));
 }
 
-export function deleteMetaDiary(id: string): void {
-  const allDiaries = readAllMetaDiaries();
-  const diaries = filterByCurrentUser(allDiaries).filter((d) => d.id !== id);
-  save(KEYS.metaDiaries, replaceCurrentUserRecords(allDiaries, diaries));
-}

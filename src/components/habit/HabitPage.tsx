@@ -7,22 +7,28 @@ import {
   addHabit,
   updateHabit,
   deleteHabit,
-  addHabitStartLog,
+  addPost,
   getHabitStartLogs,
   reorderActiveHabits
 } from "@/storage";
 import { HabitForm } from "./HabitForm";
 import { HabitList } from "./HabitList";
 
-export function HabitPage() {
+type Props = {
+  showTracker?: boolean;
+};
+
+export function HabitPage({ showTracker = true }: Props) {
   const [habits, setHabits] = useState<Habit[]>(() => getHabits());
   const [showForm, setShowForm] = useState(false);
 
-  const [logs, setLogs] = useState<HabitStartLog[]>(() => getHabitStartLogs());
+  const [logs, setLogs] = useState<HabitStartLog[]>(() =>
+    showTracker ? getHabitStartLogs() : []
+  );
 
   function reload() {
     setHabits(getHabits());
-    setLogs(getHabitStartLogs());
+    if (showTracker) setLogs(getHabitStartLogs());
   }
 
   function handleAdd(data: CreateHabitInput) {
@@ -47,13 +53,18 @@ export function HabitPage() {
   }
 
   function handleLogStart(habitId: string, note: string | null) {
-    addHabitStartLog({
-      habitId,
-      startedAt: new Date().toISOString(),
-      note,
+    addPost({
+      postedAt: new Date().toISOString(),
+      habitTags: [habitId],
+      whatText: note,
+      resultText: null,
+      questionText: null,
+      moodScore: null,
+      freeTags: [],
     });
     reload();
   }
+
 
   function handleReorder(orderedIds: string[]) {
     reorderActiveHabits(orderedIds);
@@ -86,7 +97,7 @@ export function HabitPage() {
         onUpdate={handleUpdate}
         onDelete={handleDelete}
         onToggleActive={handleToggleActive}
-        onLogStart={handleLogStart}
+        onLogStart={showTracker ? handleLogStart : undefined}
       />
     </div>
   );

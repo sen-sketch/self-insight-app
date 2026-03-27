@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { getHabitStartLogs } from "@/storage";
 import { getHabitWeeklyStats } from "@/lib/habitStats";
 import type { DailyStartEntry } from "@/lib/habitStats";
@@ -8,7 +8,7 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 // ─── 表示ユーティリティ ───────────────────────────────────────
 
-const DAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"] as const;
+const DAY_LABELS_JP = ["日", "月", "火", "水", "木", "金", "土"] as const;
 
 function minutesToHHmm(minutes: number): string {
   const h = Math.floor(minutes / 60);
@@ -16,34 +16,33 @@ function minutesToHHmm(minutes: number): string {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
-function getDayLabel(ymd: string): string {
+function formatClickDate(ymd: string): string {
   const [y, m, d] = ymd.split("-").map(Number);
-  const idx = (new Date(Date.UTC(y, m - 1, d)).getUTCDay() + 6) % 7;
-  return DAY_LABELS[idx];
+  const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return `${m}月${d}日（${DAY_LABELS_JP[dow]}）`;
 }
 
 // ─── 日別プロット ─────────────────────────────────────────────
 
-function HabitStartDotPlot({ entries }: { entries: DailyStartEntry[] }) {
+type DotPlotProps = {
+  entries: DailyStartEntry[];
+  activeDate: string | null;
+  onClickDate: (date: string) => void;
+};
+
+function HabitStartDotPlot({ entries, activeDate, onClickDate }: DotPlotProps) {
   return (
-    <div className="flex items-end justify-between gap-1">
+    <div className="flex gap-1">
       {entries.map((entry) => {
         const has = entry.minutesSinceMidnight !== null;
         return (
-          <div key={entry.date} className="flex flex-1 flex-col items-center gap-0.5">
-            <span
-              className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                has
-                  ? "bg-[#3d5016] text-white"
-                  : "border border-zinc-400 text-zinc-400"
-              }`}
-            >
-              {has ? "●" : "○"}
-            </span>
-            <span className="text-[10px] text-zinc-400">
-              {getDayLabel(entry.date)}
-            </span>
-            <span className="text-[9px] leading-tight text-zinc-500">
+          <div key={entry.date} className="flex flex-col items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => onClickDate(entry.date)}
+              className={`h-3 w-3 rounded-sm ${has ? "bg-[#3d5016]" : "bg-[#f0ede6]"}`}
+            />
+            <span className="text-[9px] leading-tight text-zinc-500 tabular-nums">
               {has ? minutesToHHmm(entry.minutesSinceMidnight!) : "\u00A0"}
             </span>
           </div>
@@ -58,6 +57,8 @@ function HabitStartDotPlot({ entries }: { entries: DailyStartEntry[] }) {
 type Props = { habitId: string };
 
 export function HabitWeeklySummary({ habitId }: Props) {
+  const [activeDate, setActiveDate] = useState<string | null>(null);
+
   const stats = useMemo(() => {
     return getHabitWeeklyStats(getHabitStartLogs(), habitId);
   }, [habitId]);
@@ -68,28 +69,36 @@ export function HabitWeeklySummary({ habitId }: Props) {
     if (stats.direction === "earlier")
       return <span className="flex items-center gap-0.5 text-[#3d5016]"><TrendingUp size={12} strokeWidth={3} /> {abs}分 早まった</span>;
     if (stats.direction === "later")
-      return <span className="flex items-center gap-0.5 text-red-500 dark:text-red-400"><TrendingDown size={12} strokeWidth={3} /> {abs}分 遅れた</span>;
+      return <span className="flex items-center gap-0.5 text-red-500"><TrendingDown size={12} strokeWidth={3} /> {abs}分 遅れた</span>;
     return <span className="flex items-center gap-0.5 text-zinc-400"><Minus size={12} strokeWidth={3} /> ほぼ同じ</span>;
   })();
 
+  function handleClickDate(date: string) {
+    setActiveDate(activeDate === date ? null : date);
+  }
+
   return (
-    <div className="mt-3 border border-zinc-200 bg-white px-3 py-2">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-xs font-medium text-zinc-500">直近7日</span>
-        <div className="flex items-center gap-2 text-xs">
-          {stats.currentAvgMinutes !== null && (
-            <span className="text-zinc-700">
-              平均 {minutesToHHmm(stats.currentAvgMinutes)}
-            </span>
-          )}
+    <div className="mt-2" onTouchStart={(e) => e.stopPropagation()}>
+      {/* カレンダー（右寄せ） */}
+      <div className="flex justify-end">
+        <HabitStartDotPlot
+          entries={stats.currentWeek}
+          activeDate={activeDate}
+          onClickDate={handleClickDate}
+        />
+      </div>
+      {/* トレンド */}
+      {directionNode && (
+        <div className="mt-0.5 flex justify-end text-xs">
           {directionNode}
         </div>
-      </div>
-      <div className="overflow-x-auto">
-        <div className="min-w-[280px]">
-          <HabitStartDotPlot entries={stats.currentWeek} />
-        </div>
-      </div>
+      )}
+      {/* クリック日付 */}
+      {activeDate && (
+        <p className="mt-0.5 text-right text-[10px] text-zinc-500">
+          {formatClickDate(activeDate)}
+        </p>
+      )}
     </div>
   );
 }

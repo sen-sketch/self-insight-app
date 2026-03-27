@@ -3,54 +3,54 @@
 "use client";
 
 import { useState } from "react";
-import type { MoodScore, TimelinePost } from "@/lib/types";
+import type { Post, CreatePostInput, Habit } from "@/lib/types";
 import {
-  getTimelinePosts,
-  addTimelinePost,
-  updateTimelinePost,
-  deleteTimelinePost,
+  getPosts,
+  addPost,
+  updatePost,
+  deletePost,
+  getHabits,
 } from "@/storage";
 import { toTokyoYmd } from "@/lib/datetime";
-import { TimelinePostForm } from "./TimelinePostForm";
-import { TimelinePostList } from "./TimelinePostList";
+import { UnifiedPostForm } from "@/components/post/UnifiedPostForm";
+import { PostList } from "@/components/post/PostList";
 import { TimelineFilters } from "./TimelineFilters";
 
-type UpdateData = { postedAt: string; moodScore: MoodScore; content: string; tags: string[] };
-
 export function TimelinePage() {
-  const [posts, setPosts] = useState<TimelinePost[]>(() => getTimelinePosts());
+  const [posts, setPosts] = useState<Post[]>(() => getPosts());
+  const [habits] = useState<Habit[]>(() => getHabits());
   const [showForm, setShowForm] = useState(false);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [tagFilter, setTagFilter] = useState("");
 
   function reload() {
-    setPosts(getTimelinePosts());
+    setPosts(getPosts());
   }
 
-  function handleAdd(data: UpdateData) {
-    addTimelinePost(data);
+  function handleAdd(data: CreatePostInput) {
+    addPost(data);
     reload();
     setShowForm(false);
   }
 
-  function handleUpdate(id: string, data: UpdateData) {
-    updateTimelinePost(id, data);
+  function handleUpdate(id: string, data: CreatePostInput) {
+    updatePost(id, data);
     reload();
   }
 
   function handleDelete(id: string) {
-    deleteTimelinePost(id);
+    deletePost(id);
     reload();
   }
 
-  const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort();
+  const allTags = [...new Set(posts.flatMap((p) => p.freeTags))].sort();
 
   const filteredPosts = posts.filter((post) => {
     const postDate = toTokyoYmd(post.postedAt);
     if (fromDate && postDate < fromDate) return false;
     if (toDate && postDate > toDate) return false;
-    if (tagFilter && !post.tags.includes(tagFilter)) return false;
+    if (tagFilter && !post.freeTags.includes(tagFilter)) return false;
     return true;
   });
 
@@ -69,7 +69,11 @@ export function TimelinePage() {
       </div>
 
       {showForm && (
-        <TimelinePostForm onSubmit={handleAdd} onCancel={() => setShowForm(false)} />
+        <UnifiedPostForm
+          habits={habits}
+          onSubmit={handleAdd}
+          onCancel={() => setShowForm(false)}
+        />
       )}
 
       <TimelineFilters
@@ -93,8 +97,9 @@ export function TimelinePage() {
         </p>
       )}
 
-      <TimelinePostList
+      <PostList
         posts={filteredPosts}
+        habits={habits}
         onUpdate={handleUpdate}
         onDelete={handleDelete}
       />

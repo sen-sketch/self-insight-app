@@ -22,25 +22,6 @@ export type UpdatedMeta = {
 
 export type Timestamped = CreatedMeta & UpdatedMeta;
 
-// ─── タイムライン投稿 ─────────────────────────────────────
-
-export type TimelinePost = UserScoped &
-  Timestamped & {
-    id: UUID;
-    postedAt: IsoDateTimeString;
-    moodScore: MoodScore;
-    content: string;
-    tags: string[];
-  };
-
-export type CreateTimelinePostInput = {
-  postedAt: IsoDateTimeString;
-  moodScore: MoodScore;
-  content: string;
-  tags: string[];
-};
-
-export type UpdateTimelinePostInput = Partial<CreateTimelinePostInput>;
 
 // ─── 習慣タスク ────────────────────────────────────────────
 
@@ -71,49 +52,29 @@ export type HabitStartLog = UserScoped &
     note: string | null;
   };
 
-export type CreateHabitStartLogInput = {
-  habitId: UUID;
-  startedAt: IsoDateTimeString;
-  note: string | null;
-};
 
-// ─── 運を上げる記録 ────────────────────────────────────────
+// ─── 統合投稿 ──────────────────────────────────────────────
 
-export type LuckRecord = UserScoped &
+export type Post = UserScoped &
   Timestamped & {
     id: UUID;
-    recordedAt: IsoDateTimeString;
-    challengeText: string;
-    emotionText: string;
-    insightText: string | null;
-    nextActionText: string | null;
+    postedAt: IsoDateTimeString;
+    moodScore: MoodScore | null;
+    whatText: string | null;
+    resultText: string | null;
+    questionText: string | null;
+    habitTags: UUID[];   // Habit.id の配列
+    freeTags: string[];
   };
 
-export type CreateLuckRecordInput = {
-  recordedAt: IsoDateTimeString;
-  challengeText: string;
-  emotionText: string;
-  insightText: string | null;
-  nextActionText: string | null;
+export type CreatePostInput = {
+  postedAt: IsoDateTimeString;
+  moodScore: MoodScore | null;
+  whatText: string | null;
+  resultText: string | null;
+  questionText: string | null;
+  habitTags: UUID[];
+  freeTags: string[];
 };
 
-export type UpdateLuckRecordInput = Partial<CreateLuckRecordInput>;
-
-// ─── メタ認知日記 ──────────────────────────────────────────
-
-export type MetaDiary = UserScoped &
-  Timestamped & {
-    id: UUID;
-    diaryDate: IsoDateString;
-    goalText: string;
-    actualText: string;
-    blockedPointsText: string | null;
-    tomorrowPlanText: string;
-  };
-
-export type UpsertMetaDiaryInput = {
-  goalText: string;
-  actualText: string;
-  blockedPointsText: string | null;
-  tomorrowPlanText: string;
-};
+export type UpdatePostInput = Partial<CreatePostInput>;

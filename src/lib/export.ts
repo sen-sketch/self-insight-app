@@ -1,4 +1,4 @@
-import type { TimelinePost, Habit, HabitStartLog, LuckRecord, MetaDiary } from "@/lib/types";
+import type { Post, TimelinePost, Habit, HabitStartLog, LuckRecord, MetaDiary } from "@/lib/types";
 import { toTokyoYmd, toTokyoHHmm, formatDisplayDateTime } from "@/lib/datetime";
 
 export type ExportPeriod = {
@@ -26,6 +26,55 @@ function isInPeriod(isoDateTimeOrDate: string, fromDate: string, toDate: string)
     ? isoDateTimeOrDate
     : toTokyoYmd(isoDateTimeOrDate);
   return ymd >= fromDate && ymd <= toDate;
+}
+
+// ── 統合投稿フォーマット ──────────────────────────────────
+
+export function formatPosts(posts: Post[], habits: Habit[], period: ExportPeriod): string {
+  const filtered = posts
+    .filter((p) => isInPeriod(p.postedAt, period.fromDate, period.toDate))
+    .sort((a, b) => a.postedAt.localeCompare(b.postedAt));
+
+  if (filtered.length === 0) return "（この期間の投稿はありません）";
+
+  const habitMap = new Map(habits.map((h) => [h.id, h.name]));
+
+  return filtered.map((p) => {
+    const lines: string[] = [];
+    const mood = p.moodScore != null ? ` 気分: ${MOOD_LABELS[p.moodScore] ?? p.moodScore}` : "";
+    lines.push(`【${formatDisplayDateTime(p.postedAt)}】${mood}`);
+    if (p.whatText) lines.push(`何をしたか: ${p.whatText}`);
+    if (p.resultText) lines.push(`結果・気づき: ${p.resultText}`);
+    if (p.questionText) lines.push(`疑問と考察: ${p.questionText}`);
+    if (p.habitTags.length > 0) {
+      const names = p.habitTags.map((id) => habitMap.get(id) ?? id);
+      lines.push(`習慣: ${names.join(", ")}`);
+    }
+    if (p.freeTags.length > 0) lines.push(`タグ: ${p.freeTags.join(", ")}`);
+    return lines.join("\n");
+  }).join("\n\n");
+}
+
+export function buildPostsExportText(params: {
+  period: ExportPeriod;
+  posts: Post[];
+  habits: Habit[];
+}): string {
+  const { period, posts, habits } = params;
+  const sections: string[] = [];
+
+  sections.push(`## 自己観察データ（${period.fromDate} 〜 ${period.toDate}）`);
+  sections.push(formatPosts(posts, habits, period));
+  sections.push(
+    `---\n以上のデータをもとに、以下の観点で分析してください。\n` +
+    `1. この期間の行動・感情パターンの傾向\n` +
+    `2. 繰り返しているポジティブな行動や思考\n` +
+    `3. 繰り返しているネガティブな行動や思考\n` +
+    `4. 改善できそうな具体的な行動提案\n` +
+    `5. 来週に向けてのアドバイス`
+  );
+
+  return sections.join("\n\n");
 }
 
 // ── ステップ3：タイムライン ──────────────────────────────────
