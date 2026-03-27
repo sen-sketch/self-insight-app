@@ -2,7 +2,9 @@ import type {
   CreateHabitInput,
   CreateHabitStartLogInput,
   CreateLuckRecordInput,
+  CreatePostInput,
   CreateTimelinePostInput,
+  Post,
   TimelinePost,
   Habit,
   HabitStartLog,
@@ -11,12 +13,15 @@ import type {
   UpsertMetaDiaryInput,
   UpdateHabitInput,
   UpdateLuckRecordInput,
+  UpdatePostInput,
   UpdateTimelinePostInput,
 } from "@/lib/types";
 import {
   validateLuckRecordInput,
   validateLuckRecordPatch,
   validateMetaDiaryInput,
+  validatePostInput,
+  validatePostPatch,
   validateTimelinePostInput,
   validateTimelinePostPatch,
 } from "@/lib/validation";
@@ -25,6 +30,7 @@ import {
 
 const KEYS = {
   currentUserId: "sia:current_user_id",
+  posts: "sia:posts",
   timelinePosts: "sia:timeline_posts",
   habits: "sia:habits",
   habitStartLogs: "sia:habit_start_logs",
@@ -149,6 +155,52 @@ function replaceCurrentUserRecords<T extends { id: string; userId: string }>(
     (record) => record.userId !== currentUserId
   );
   return [...otherUsersRecords, ...currentUserRecords];
+}
+
+// ─── 統合投稿 ──────────────────────────────────────────────
+
+function readAllPosts(): Post[] {
+  return load<Post>(KEYS.posts).map((post) => withUserId(post));
+}
+
+export function getPosts(): Post[] {
+  return filterByCurrentUser(readAllPosts()).sort((left, right) =>
+    byIsoDateDesc(left, right, "postedAt")
+  );
+}
+
+export function addPost(draft: CreatePostInput): Post {
+  const validatedDraft = validatePostInput(draft);
+
+  const allPosts = readAllPosts();
+  const posts = filterByCurrentUser(allPosts);
+  const record: Post = {
+    ...validatedDraft,
+    id: newId(),
+    userId: getCurrentUserId(),
+    createdAt: now(),
+    updatedAt: now(),
+  };
+  save(KEYS.posts, replaceCurrentUserRecords(allPosts, [record, ...posts]));
+  return record;
+}
+
+export function updatePost(id: string, patch: UpdatePostInput): void {
+  const validatedPatch = validatePostPatch(patch);
+
+  const allPosts = readAllPosts();
+  const posts = filterByCurrentUser(allPosts).map((p) =>
+    p.id === id && p.userId === getCurrentUserId()
+      ? { ...p, ...validatedPatch, updatedAt: now() }
+      : p
+  );
+  save(KEYS.posts, replaceCurrentUserRecords(allPosts, posts));
+}
+
+export function deletePost(id: string): void {
+  const allPosts = readAllPosts();
+  const posts = filterByCurrentUser(allPosts).filter((p) => p.id !== id);
+  save(KEYS.posts, replaceCurrentUserRecords(allPosts, posts));
 }
 
 // ─── タイムライン投稿 ─────────────────────────────────────

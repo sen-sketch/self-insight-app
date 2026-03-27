@@ -1,8 +1,10 @@
 import type {
   CreateLuckRecordInput,
+  CreatePostInput,
   CreateTimelinePostInput,
   UpsertMetaDiaryInput,
   UpdateLuckRecordInput,
+  UpdatePostInput,
   UpdateTimelinePostInput,
 } from "@/lib/types";
 
@@ -158,6 +160,51 @@ export function validateLuckRecordPatch(
 
   if (nextPatch.nextActionText !== undefined) {
     nextPatch.nextActionText = nextPatch.nextActionText?.trim() || null;
+  }
+
+  return nextPatch;
+}
+
+export function validatePostInput(
+  input: CreatePostInput
+): CreatePostInput {
+  if (input.moodScore !== null) {
+    assertMoodScore(input.moodScore);
+  }
+
+  return {
+    ...input,
+    whatText: input.whatText?.trim() || null,
+    resultText: input.resultText?.trim() || null,
+    questionText: input.questionText?.trim() || null,
+    habitTags: [...new Set(input.habitTags)],
+    freeTags: normalizeTags(input.freeTags),
+  };
+}
+
+export function validatePostPatch(
+  patch: UpdatePostInput
+): UpdatePostInput {
+  const nextPatch = { ...patch };
+
+  if (nextPatch.moodScore !== undefined && nextPatch.moodScore !== null) {
+    assertMoodScore(nextPatch.moodScore);
+  }
+
+  if (nextPatch.whatText !== undefined) {
+    nextPatch.whatText = nextPatch.whatText?.trim() || null;
+  }
+  if (nextPatch.resultText !== undefined) {
+    nextPatch.resultText = nextPatch.resultText?.trim() || null;
+  }
+  if (nextPatch.questionText !== undefined) {
+    nextPatch.questionText = nextPatch.questionText?.trim() || null;
+  }
+  if (nextPatch.habitTags !== undefined) {
+    nextPatch.habitTags = [...new Set(nextPatch.habitTags)];
+  }
+  if (nextPatch.freeTags !== undefined) {
+    nextPatch.freeTags = normalizeTags(nextPatch.freeTags);
   }
 
   return nextPatch;

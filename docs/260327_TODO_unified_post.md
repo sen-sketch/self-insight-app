@@ -37,12 +37,12 @@
 
 ## Phase 2: ストレージ層の統合 (`src/storage/index.ts`)
 
-- [ ] `KEYS.posts = "sia:posts"` を追加
-- [ ] `getPosts()` を実装
-- [ ] `addPost(draft: CreatePostInput)` を実装
-- [ ] `updatePost(id, patch: UpdatePostInput)` を実装
-- [ ] `deletePost(id)` を実装
-- [ ] バリデーション関数 `validatePostInput` を `src/lib/validation.ts` に追加
+- [x] `KEYS.posts = "sia:posts"` を追加
+- [x] `getPosts()` を実装
+- [x] `addPost(draft: CreatePostInput)` を実装
+- [x] `updatePost(id, patch: UpdatePostInput)` を実装
+- [x] `deletePost(id)` を実装
+- [x] バリデーション関数 `validatePostInput` を `src/lib/validation.ts` に追加
 
 ---
 
