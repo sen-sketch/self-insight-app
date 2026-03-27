@@ -20,7 +20,7 @@ type Props = {
   submitLabel?: string;
 };
 
-const MOOD_SCORES: MoodScore[] = [1, 2, 3, 4, 5];
+const MOOD_SCORES: MoodScore[] = [5, 4, 3, 2, 1];
 const MOOD_ICONS: Record<MoodScore, LucideIcon> = {
   1: Annoyed,
   2: Frown,

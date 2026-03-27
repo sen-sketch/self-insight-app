@@ -13,7 +13,7 @@ type Props = {
   submitLabel?: string;
 };
 
-const MOOD_SCORES: MoodScore[] = [1, 2, 3, 4, 5];
+const MOOD_SCORES: MoodScore[] = [5, 4, 3, 2, 1];
 const MOOD_ICONS: Record<MoodScore, LucideIcon> = {
   1: Annoyed,
   2: Frown,
@@ -115,7 +115,6 @@ export function UnifiedPostForm({
       <div className="flex flex-col gap-1">
         <span className="text-sm font-medium text-zinc-700">
           気分
-          <span className="ml-1 text-xs font-normal text-zinc-400">任意</span>
         </span>
         <div className="flex gap-2">
           {MOOD_SCORES.map((score) => {
@@ -147,7 +146,6 @@ export function UnifiedPostForm({
           className="text-sm font-medium text-zinc-700"
         >
           何をしたか
-          <span className="ml-1 text-xs font-normal text-zinc-400">任意</span>
         </label>
         <textarea
           id="post-what"
@@ -166,7 +164,6 @@ export function UnifiedPostForm({
           className="text-sm font-medium text-zinc-700"
         >
           結果・気づき
-          <span className="ml-1 text-xs font-normal text-zinc-400">任意</span>
         </label>
         <textarea
           id="post-result"
@@ -185,7 +182,6 @@ export function UnifiedPostForm({
           className="text-sm font-medium text-zinc-700"
         >
           疑問と考察
-          <span className="ml-1 text-xs font-normal text-zinc-400">任意</span>
         </label>
         <textarea
           id="post-question"
@@ -202,7 +198,6 @@ export function UnifiedPostForm({
         <div className="flex flex-col gap-1">
           <span className="text-sm font-medium text-zinc-700">
             習慣タスク
-            <span className="ml-1 text-xs font-normal text-zinc-400">任意・複数選択可</span>
           </span>
           <div className="flex flex-wrap gap-2">
             {activeHabits.map((habit) => {
@@ -233,7 +228,6 @@ export function UnifiedPostForm({
           className="text-sm font-medium text-zinc-700"
         >
           タグ（カンマ区切り）
-          <span className="ml-1 text-xs font-normal text-zinc-400">任意</span>
         </label>
         <input
           id="post-free-tags"
