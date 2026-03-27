@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Habit, CreatePostInput } from "@/lib/types";
-import { getHabits, addPost, addHabitStartLog } from "@/storage";
+import { getHabits, addPost} from "@/storage";
 import { UnifiedPostForm } from "./UnifiedPostForm";
 
 export function PostPage() {
@@ -12,10 +12,8 @@ export function PostPage() {
 
   function handleSubmit(data: CreatePostInput) {
     addPost(data);
-    for (const habitId of data.habitTags) {
-      addHabitStartLog({ habitId, startedAt: data.postedAt, note: null });
-    }
     setSubmitted(true);
+
     setFormKey((k) => k + 1);
     setTimeout(() => setSubmitted(false), 2000);
   }

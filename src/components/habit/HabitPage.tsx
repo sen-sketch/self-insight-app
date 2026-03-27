@@ -7,7 +7,7 @@ import {
   addHabit,
   updateHabit,
   deleteHabit,
-  addHabitStartLog,
+  addPost,
   getHabitStartLogs,
   reorderActiveHabits
 } from "@/storage";
@@ -53,13 +53,18 @@ export function HabitPage({ showTracker = true }: Props) {
   }
 
   function handleLogStart(habitId: string, note: string | null) {
-    addHabitStartLog({
-      habitId,
-      startedAt: new Date().toISOString(),
-      note,
+    addPost({
+      postedAt: new Date().toISOString(),
+      habitTags: [habitId],
+      whatText: note,
+      resultText: null,
+      questionText: null,
+      moodScore: null,
+      freeTags: [],
     });
     reload();
   }
+
 
   function handleReorder(orderedIds: string[]) {
     reorderActiveHabits(orderedIds);

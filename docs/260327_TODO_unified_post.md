@@ -127,13 +127,13 @@
 
 移行・動作確認後に削除
 
-- [ ] `src/components/timeline/TimelinePostForm.tsx`
-- [ ] `src/components/luck/` ディレクトリ
-- [ ] `src/components/metadiary/` ディレクトリ
-- [ ] `src/app/luck/` ディレクトリ
-- [ ] `src/app/metadiary/` ディレクトリ
-- [ ] `src/lib/types.ts` から旧型定義を削除
-- [ ] `src/storage/index.ts` から旧CRUD関数を削除
+- [x] `src/components/timeline/TimelinePostForm.tsx`
+- [x] `src/components/luck/` ディレクトリ
+- [x] `src/components/metadiary/` ディレクトリ
+- [x] `src/app/luck/` ディレクトリ
+- [x] `src/app/metadiary/` ディレクトリ
+- [x] `src/lib/types.ts` から旧型定義を削除
+- [x] `src/storage/index.ts` から旧CRUD関数を削除
 
 ---
 
