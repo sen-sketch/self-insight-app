@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { CreateHabitInput, Habit, HabitStartLog } from "@/lib/types";
 import { HabitForm } from "./HabitForm";
 import { HabitWeeklySummary } from "./HabitWeeklySummary";
 import { toTokyoYmd, toTokyoHHmm } from "@/lib/datetime";
+import { getHabitWeeklyStats } from "@/lib/habitStats";
 import { Pencil, Trash2, BarChart2, X } from "lucide-react";
+
+function minutesToHHmm(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
 
 type Props = {
   habit: Habit;
@@ -22,6 +29,11 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
   const [showNoteInput, setShowNoteInput] = useState(false);
   const [note, setNote] = useState("");
   const [actionsExpanded, setActionsExpanded] = useState(false);
+
+  const avgMinutes = useMemo(
+    () => getHabitWeeklyStats(logs, habit.id).currentAvgMinutes,
+    [logs, habit.id]
+  );
 
   function handleUpdate(data: CreateHabitInput) {
     onUpdate(habit.id, data);
@@ -75,6 +87,11 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
               >
                 メモ
               </button>
+            )}
+            {avgMinutes !== null && (
+              <span className="text-xs tabular-nums text-zinc-400">
+                {minutesToHHmm(avgMinutes)}
+              </span>
             )}
             <button
               onClick={() => setShowWeekly((prev) => !prev)}
@@ -183,7 +200,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
         );
       })()}
 
-      {habit.isActive && showWeekly && <HabitWeeklySummary habitId={habit.id} />}
+      {habit.isActive && (showWeekly || !onLogStart) && <HabitWeeklySummary habitId={habit.id} />}
     </div>
   );
 }

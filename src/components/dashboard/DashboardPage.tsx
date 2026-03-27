@@ -4,14 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   getPosts,
-  addPost,
   updatePost,
   deletePost,
   getHabits,
   addHabit,
   updateHabit,
   deleteHabit,
-  addHabitStartLog,
   getHabitStartLogs,
   reorderActiveHabits,
 } from "@/storage";
@@ -58,22 +56,6 @@ export function DashboardPage() {
 
   function reloadPosts() {
     setPosts(getPosts());
-  }
-
-  function handleLogStart(habitId: string, note: string | null) {
-    const startedAt = new Date().toISOString();
-    addHabitStartLog({ habitId, startedAt, note });
-    addPost({
-      postedAt: startedAt,
-      moodScore: null,
-      whatText: note ?? null,
-      resultText: null,
-      questionText: null,
-      habitTags: [habitId],
-      freeTags: [],
-    });
-    reloadHabits();
-    reloadPosts();
   }
 
   function handleReorder(orderedIds: string[]) {
@@ -166,7 +148,7 @@ export function DashboardPage() {
           onUpdate={handleUpdateHabit}
           onDelete={handleDeleteHabit}
           onToggleActive={handleToggleActive}
-          onLogStart={handleLogStart}
+
         />
       </section>
 
