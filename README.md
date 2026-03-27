@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 自己観察Webアプリ（self-insight-app）
 
-## Getting Started
+日々の思考・感情・行動を記録し、振り返りとLLMへのエクスポートを支援するスマホ向けWebアプリ。
 
-First, run the development server:
+## 概要
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 単一ユーザー前提のパーソナルな記録ツール
+- データはブラウザのlocalStorageに保存（サーバ送信なし）
+- LLMに貼り付けられる形式でエクスポート可能
+
+## 画面構成
+
+| 画面 | パス | 概要 |
+|------|------|------|
+| S01 ダッシュボード | `/` | 各記録のサマリー |
+| S02 タイムライン | `/timeline` | 投稿の一覧・フィルタ |
+| S03 習慣トラッカー | `/tracker` | 習慣タスクの管理と開始記録 |
+| S04 投稿 | `/post` | タイムライン・運記録・メタ認知日記の入力 |
+| S05 エクスポート | `/export` | 1日/7日/30日のテキスト生成 |
+| 設定 | `/settings` | アプリ設定 |
+
+## 技術スタック
+
+- **フレームワーク**: Next.js 16 (App Router)
+- **言語**: TypeScript
+- **スタイリング**: Tailwind CSS v4
+- **アイコン**: lucide-react
+- **データ保存**: localStorage（`storage/` 層経由）
+
+## ディレクトリ構成
+
+```
+src/
+├── app/          # Next.js App Router ページ
+├── components/   # 画面単位・UI部品
+│   ├── dashboard/
+│   ├── export/
+│   ├── habit/
+│   ├── layout/
+│   ├── post/
+│   ├── settings/
+│   └── timeline/
+├── lib/          # 集計・エクスポート・型・バリデーション・日付処理
+└── storage/      # ローカル保存（将来のDB切替点）
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 開発環境のセットアップ
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`http://localhost:3000` で起動する。
 
-## Learn More
+## その他コマンド
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build   # 本番ビルド
+npm run lint    # ESLint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## データについて
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- すべてのデータはブラウザの `localStorage` に保存される
+- サーバへの送信は一切行わない
+- ブラウザのデータをクリアするとデータが消えるため、エクスポート機能でバックアップを推奨
