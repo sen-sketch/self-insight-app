@@ -11,7 +11,7 @@ type Props = {
   onUpdate: (id: string, patch: Partial<CreateHabitInput>) => void;
   onDelete: (id: string) => void;
   onToggleActive: (id: string, isActive: boolean) => void;
-  onLogStart: (habitId: string, note: string | null) => void;
+  onLogStart?: (habitId: string, note: string | null) => void;
 };
 
 export function HabitList({ habits, logs, onUpdate, onReorder, onDelete, onToggleActive, onLogStart }: Props) {

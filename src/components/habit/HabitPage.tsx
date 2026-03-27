@@ -14,15 +14,21 @@ import {
 import { HabitForm } from "./HabitForm";
 import { HabitList } from "./HabitList";
 
-export function HabitPage() {
+type Props = {
+  showTracker?: boolean;
+};
+
+export function HabitPage({ showTracker = true }: Props) {
   const [habits, setHabits] = useState<Habit[]>(() => getHabits());
   const [showForm, setShowForm] = useState(false);
 
-  const [logs, setLogs] = useState<HabitStartLog[]>(() => getHabitStartLogs());
+  const [logs, setLogs] = useState<HabitStartLog[]>(() =>
+    showTracker ? getHabitStartLogs() : []
+  );
 
   function reload() {
     setHabits(getHabits());
-    setLogs(getHabitStartLogs());
+    if (showTracker) setLogs(getHabitStartLogs());
   }
 
   function handleAdd(data: CreateHabitInput) {
@@ -86,7 +92,7 @@ export function HabitPage() {
         onUpdate={handleUpdate}
         onDelete={handleDelete}
         onToggleActive={handleToggleActive}
-        onLogStart={handleLogStart}
+        onLogStart={showTracker ? handleLogStart : undefined}
       />
     </div>
   );

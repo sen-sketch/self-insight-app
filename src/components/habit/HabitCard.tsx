@@ -13,7 +13,7 @@ type Props = {
   onUpdate: (id: string, patch: Partial<CreateHabitInput>) => void;
   onDelete: (id: string) => void;
   onToggleActive: (id: string, isActive: boolean) => void;
-  onLogStart: (habitId: string, note: string | null) => void;
+  onLogStart?: (habitId: string, note: string | null) => void;
 };
 
 export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onLogStart }: Props) {
@@ -30,7 +30,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
   }
 
   function handleConfirmNote() {
-    onLogStart(habit.id, note.trim() || null);
+    onLogStart?.(habit.id, note.trim() || null);
     setShowNoteInput(false);
     setNote("");
   }
@@ -63,7 +63,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
             <span className="text-xs text-zinc-400">目標: {habit.targetStartTime}</span>
           )}
         </div>
-        {habit.isActive && (
+        {habit.isActive && onLogStart && (
           <button
             onClick={() => onLogStart(habit.id, null)}
             className="shrink-0 bg-[#3d5016] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#4a6320] active:bg-[#2e3d10]"
@@ -74,7 +74,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
       </div>
 
       {/* メモ入力（展開時） */}
-      {habit.isActive && showNoteInput && (
+      {habit.isActive && onLogStart && showNoteInput && (
         <div className="mt-2 flex flex-col gap-2">
           <input
             type="text"
@@ -103,7 +103,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
 
       {/* Row 2: 操作群（メモ・有効/無効・グラフ・編集） */}
       <div className="mt-2 flex items-center gap-1">
-        {habit.isActive && !showNoteInput && (
+        {habit.isActive && onLogStart && !showNoteInput && (
           <button
             onClick={() => setShowNoteInput(true)}
             className="border border-zinc-200 px-2.5 py-1 text-xs text-zinc-500 hover:bg-zinc-100"
@@ -170,7 +170,7 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
       </div>
 
       {/* 時刻チップ */}
-      {habit.isActive && (() => {
+      {habit.isActive && onLogStart && (() => {
         const todayYmd = toTokyoYmd(new Date().toISOString());
         const todayLogs = logs
           .filter((l) => toTokyoYmd(l.startedAt) === todayYmd)
