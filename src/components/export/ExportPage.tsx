@@ -2,12 +2,8 @@
 
 import { useState, useCallback, useRef } from "react";
 import { toTokyoYmd, getRecentDateRange } from "@/lib/datetime";
-import {
-  getTimelinePosts,
-  getHabits,
-  getHabitStartLogs,
-} from "@/storage";
-import { buildTimelineExportText, buildHabitExportText } from "@/lib/export";
+import { getPosts, getHabits } from "@/storage";
+import { buildPostsExportText } from "@/lib/export";
 import type { ExportPeriod } from "@/lib/export";
 
 const PRESET_DAYS = [
@@ -53,22 +49,12 @@ export function ExportPage() {
   const [copyError, setCopyError] = useState<string | null>(null);
   const outputRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const generateTimeline = useCallback(() => {
+  const generatePosts = useCallback(() => {
     const period: ExportPeriod = { fromDate, toDate };
-    const text = buildTimelineExportText({
+    const text = buildPostsExportText({
       period,
-      timelinePosts: getTimelinePosts(),
-    });
-    setOutputText(text);
-    setCopied(false);
-  }, [fromDate, toDate]);
-
-  const generateHabit = useCallback(() => {
-    const period: ExportPeriod = { fromDate, toDate };
-    const text = buildHabitExportText({
-      period,
+      posts: getPosts(),
       habits: getHabits(),
-      habitLogs: getHabitStartLogs(),
     });
     setOutputText(text);
     setCopied(false);
@@ -152,17 +138,10 @@ export function ExportPage() {
         <div className="flex flex-col gap-2">
           <button
             type="button"
-            onClick={generateTimeline}
+            onClick={generatePosts}
             className="w-full border border-zinc-900 bg-[#3d5016] py-2.5 text-white font-bold hover:bg-[#4a6320] transition-colors"
           >
-            タイムライン
-          </button>
-          <button
-            type="button"
-            onClick={generateHabit}
-            className="w-full border border-zinc-900 bg-[#3d5016] py-2.5 text-white font-bold hover:bg-[#4a6320] transition-colors"
-          >
-            習慣記録
+            統合記録を出力
           </button>
         </div>
       </section>
