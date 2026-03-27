@@ -74,13 +74,13 @@ export function LuckRecordForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
+      className="flex flex-col gap-4 border border-zinc-200 bg-white p-4"
     >
       {/* やってみた行動 */}
       <div className="flex flex-col gap-1">
         <label
           htmlFor="luck-challenge"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           やってみた行動 <span className="text-red-500">*</span>
         </label>
@@ -90,7 +90,7 @@ export function LuckRecordForm({
           value={challengeText}
           onChange={(e) => setChallengeText(e.target.value)}
           placeholder="運を上げるためにやってみたこと"
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -98,7 +98,7 @@ export function LuckRecordForm({
       <div className="flex flex-col gap-1">
         <label
           htmlFor="luck-emotion"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           そのときの感情 <span className="text-red-500">*</span>
         </label>
@@ -108,7 +108,7 @@ export function LuckRecordForm({
           value={emotionText}
           onChange={(e) => setEmotionText(e.target.value)}
           placeholder="行動したときに感じたこと"
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -116,7 +116,7 @@ export function LuckRecordForm({
       <div className="flex flex-col gap-1">
         <label
           htmlFor="luck-insight"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           気づき・洞察
         </label>
@@ -126,7 +126,7 @@ export function LuckRecordForm({
           value={insightText}
           onChange={(e) => setInsightText(e.target.value)}
           placeholder="振り返って気づいたこと（任意）"
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -134,7 +134,7 @@ export function LuckRecordForm({
       <div className="flex flex-col gap-1">
         <label
           htmlFor="luck-next-action"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           次のアクション
         </label>
@@ -144,7 +144,7 @@ export function LuckRecordForm({
           value={nextActionText}
           onChange={(e) => setNextActionText(e.target.value)}
           placeholder="次にやってみること（任意）"
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -152,7 +152,7 @@ export function LuckRecordForm({
       <div className="flex flex-col gap-1">
         <label
           htmlFor="luck-recorded-at"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           日時
         </label>
@@ -161,7 +161,7 @@ export function LuckRecordForm({
           type="datetime-local"
           value={recordedAt}
           onChange={(e) => setRecordedAt(e.target.value)}
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -170,7 +170,7 @@ export function LuckRecordForm({
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 rounded-lg bg-yellow-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-yellow-600"
+          className="flex-1 border border-zinc-900 bg-[#3d5016] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#4a6320]"
         >
           {submitLabel}
         </button>
@@ -178,7 +178,7 @@ export function LuckRecordForm({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300"
+            className="border border-zinc-900 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-200"
           >
             キャンセル
           </button>

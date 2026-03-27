@@ -2,6 +2,7 @@
 
 import type { LuckRecord, UpdateLuckRecordInput } from "@/lib/types";
 import { LuckRecordCard } from "./LuckRecordCard";
+import { Clover } from "lucide-react";
 
 type Props = {
   records: LuckRecord[];
@@ -13,7 +14,7 @@ export function LuckRecordList({ records, onUpdate, onDelete }: Props) {
   if (records.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 py-12 text-zinc-400">
-        <span className="text-3xl">🍀</span>
+        <Clover size={36} strokeWidth={3} className="text-zinc-300" />
         <p className="text-sm">まだ記録がありません</p>
       </div>
     );

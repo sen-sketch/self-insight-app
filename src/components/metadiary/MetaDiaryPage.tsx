@@ -11,6 +11,7 @@ import {
 import { toTokyoYmd, getRecent30DayRange } from "@/lib/datetime";
 import { MetaDiaryForm } from "./MetaDiaryForm";
 import { MetaDiaryList } from "./MetaDiaryList";
+import { Notebook } from "lucide-react";
 
 export function MetaDiaryPage() {
   const today = toTokyoYmd();
@@ -47,8 +48,8 @@ export function MetaDiaryPage() {
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6">
-      <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-        📓 メタ認知日記
+      <h1 className="w-full text-center text-lg font-black text-zinc-900">
+        <Notebook size={20} strokeWidth={3} className="inline-block text-[#3d5016]" /> メタ認知日記
       </h1>
 
       <section className="flex flex-col gap-2">

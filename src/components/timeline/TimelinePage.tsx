@@ -58,11 +58,11 @@ export function TimelinePage() {
 
   return (
     <div className="flex flex-col gap-4 px-4 py-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">タイムライン</h1>
+      <div className="relative flex items-center">
+        <h1 className="w-full text-center text-lg font-black text-zinc-900">タイムライン</h1>
         <button
           onClick={() => setShowForm((prev) => !prev)}
-          className="rounded-lg bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+          className="absolute right-0 border border-zinc-900 bg-[#3d5016] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-[#4a6320]"
         >
           {showForm ? "閉じる" : "+ 投稿"}
         </button>

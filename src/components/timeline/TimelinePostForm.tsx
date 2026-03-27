@@ -3,6 +3,8 @@
 
 import { useState } from "react";
 import type { MoodScore, TimelinePost } from "@/lib/types";
+import { Annoyed, Frown, Meh, Smile, Laugh } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 type SubmitData = {
   postedAt: string;
@@ -19,12 +21,12 @@ type Props = {
 };
 
 const MOOD_SCORES: MoodScore[] = [1, 2, 3, 4, 5];
-const MOOD_LABELS: Record<MoodScore, string> = {
-  1: "😞",
-  2: "😕",
-  3: "😐",
-  4: "🙂",
-  5: "😄",
+const MOOD_ICONS: Record<MoodScore, LucideIcon> = {
+  1: Annoyed,
+  2: Frown,
+  3: Meh,
+  4: Smile,
+  5: Laugh,
 };
 
 function toDatetimeLocalValue(iso: string): string {
@@ -85,27 +87,30 @@ export function TimelinePostForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900"
+      className="flex flex-col gap-4 border border-zinc-200 bg-white p-4"
     >
       {/* 気分スコア */}
       <div className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">気分</span>
+        <span className="text-sm font-medium text-zinc-700">気分</span>
         <div className="flex gap-2">
-          {MOOD_SCORES.map((score) => (
-            <button
-              key={score}
-              type="button"
-              onClick={() => setMoodScore(score)}
-              aria-label={`気分スコア ${score}`}
-              className={`flex h-10 w-10 items-center justify-center rounded-full text-xl transition-all ${
-                moodScore === score
-                  ? "bg-blue-500 ring-2 ring-blue-300"
-                  : "bg-zinc-100 dark:bg-zinc-800"
-              }`}
-            >
-              {MOOD_LABELS[score]}
-            </button>
-          ))}
+          {MOOD_SCORES.map((score) => {
+            const Icon = MOOD_ICONS[score];
+            return (
+              <button
+                key={score}
+                type="button"
+                onClick={() => setMoodScore(score)}
+                aria-label={`気分スコア ${score}`}
+                className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
+                  moodScore === score
+                    ? "bg-[#3d5016] text-white ring-2 ring-[#3d5016]/40"
+                    : "bg-zinc-200 text-zinc-500"
+                }`}
+              >
+                <Icon size={20} strokeWidth={3} />
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -113,7 +118,7 @@ export function TimelinePostForm({
       <div className="flex flex-col gap-1">
         <label
           htmlFor="timeline-content"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           本文 <span className="text-red-500">*</span>
         </label>
@@ -123,7 +128,7 @@ export function TimelinePostForm({
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="今どんな状態？思考・感情・行動を書いてみよう"
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -131,7 +136,7 @@ export function TimelinePostForm({
       <div className="flex flex-col gap-1">
         <label
           htmlFor="timeline-tags"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           タグ（カンマ区切り）
         </label>
@@ -141,7 +146,7 @@ export function TimelinePostForm({
           value={tagsInput}
           onChange={(e) => setTagsInput(e.target.value)}
           placeholder="例: 仕事, 感情, 振り返り"
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -149,7 +154,7 @@ export function TimelinePostForm({
       <div className="flex flex-col gap-1">
         <label
           htmlFor="timeline-posted-at"
-          className="text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="text-sm font-medium text-zinc-700"
         >
           日時
         </label>
@@ -158,7 +163,7 @@ export function TimelinePostForm({
           type="datetime-local"
           value={postedAt}
           onChange={(e) => setPostedAt(e.target.value)}
-          className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -167,7 +172,7 @@ export function TimelinePostForm({
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+          className="flex-1 border border-zinc-900 bg-[#3d5016] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#4a6320]"
         >
           {submitLabel}
         </button>
@@ -175,7 +180,7 @@ export function TimelinePostForm({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300"
+            className="border border-zinc-900 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-200"
           >
             キャンセル
           </button>

@@ -123,6 +123,49 @@ export function formatMetaDiaries(diaries: MetaDiary[], period: ExportPeriod): s
   }).join("\n\n");
 }
 
+// ── 個別エクスポート：タイムライン ───────────────────────────
+
+export function buildTimelineExportText(params: {
+  period: ExportPeriod;
+  timelinePosts: TimelinePost[];
+}): string {
+  const { period, timelinePosts } = params;
+  const sections: string[] = [];
+
+  sections.push(`## タイムライン（${period.fromDate} 〜 ${period.toDate}）`);
+  sections.push(formatTimelinePosts(timelinePosts, period));
+  sections.push(
+    `上記は${period.fromDate}〜${period.toDate}までの感情ログです。\n` +
+    `要約して、以下の形式で出力してください。\n\n` +
+    `【頻度が高い感情TOP5】\n1.\n2.\n3.\n4.\n5.\n` +
+    `【強度が高い感情TOP3】\n1.\n2.\n3.\n\n` +
+    `高頻度X高強度＝最優先で対策\n\n` +
+    `【トリガーの共通点】\n・\n` +
+    `【感情の連鎖パターン】\n・\n` +
+    `【来週の小さな実験】（以下の項目は人間が記入）\n` +
+    `・減らしたい感情：\n・小さな実験：\n・実行した後の感情：\n` +
+    `・増やしたい感情：\n・小さな実験：\n・実行した後の感情：`
+  );
+
+  return sections.join("\n\n");
+}
+
+// ── 個別エクスポート：習慣記録 ───────────────────────────────
+
+export function buildHabitExportText(params: {
+  period: ExportPeriod;
+  habits: Habit[];
+  habitLogs: HabitStartLog[];
+}): string {
+  const { period, habits, habitLogs } = params;
+  const sections: string[] = [];
+
+  sections.push(`## 習慣記録（${period.fromDate} 〜 ${period.toDate}）`);
+  sections.push(formatHabitLogs(habits, habitLogs, period));
+
+  return sections.join("\n\n");
+}
+
 // ── ステップ7：統合テキスト生成 ──────────────────────────────
 
 export function buildExportText(params: {

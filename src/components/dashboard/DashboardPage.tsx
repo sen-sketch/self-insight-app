@@ -13,6 +13,8 @@ import { formatDisplayDateTime, toTokyoYmd } from "@/lib/datetime";
 import { getHabitWeeklyStats } from "@/lib/habitStats";
 import type { TimelinePost } from "@/lib/types";
 import type { DailyStartEntry } from "@/lib/habitStats";
+import { PenLine, CheckSquare, Clover, BookOpen, Annoyed, Frown, Meh, Smile, Laugh } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 // ─── ユーティリティ ────────────────────────────────────────────
 
@@ -39,26 +41,33 @@ type SummaryCardProps = {
 
 function SummaryCard({ label, value }: SummaryCardProps) {
   return (
-    <div className="flex flex-col rounded-xl border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-700 dark:bg-zinc-800">
-      <span className="text-xs text-zinc-500 dark:text-zinc-400">{label}</span>
-      <span className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">{value}</span>
+    <div className="flex flex-col border border-zinc-200 bg-white px-4 py-3">
+      <span className="text-xs font-bold uppercase tracking-widest text-zinc-500">{label}</span>
+      <span className="mt-1 text-3xl font-black text-zinc-900">{value}</span>
     </div>
   );
 }
 
+
 // ─── 直近投稿アイテム ──────────────────────────────────────────
 
-const MOOD_LABELS = ["", "😞", "😕", "😐", "🙂", "😊"] as const;
+const MOOD_ICONS: Record<number, LucideIcon> = {
+  1: Annoyed,
+  2: Frown,
+  3: Meh,
+  4: Smile,
+  5: Laugh,
+};
 
 function RecentPostItem({ post }: { post: TimelinePost }) {
   const date = formatDisplayDateTime(post.postedAt);
   return (
-    <div className="flex flex-col gap-1 rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800/50">
+    <div className="flex flex-col gap-1 border-b border-zinc-900 px-3 py-2 last:border-b-0">
       <div className="flex items-center justify-between">
         <span className="text-xs text-zinc-400">{date}</span>
-        <span className="text-sm">{MOOD_LABELS[post.moodScore]}</span>
+        {(() => { const Icon = MOOD_ICONS[post.moodScore]; return Icon ? <Icon size={16} strokeWidth={3} className="text-zinc-400" /> : null; })()}
       </div>
-      <p className="line-clamp-2 text-sm text-zinc-700 dark:text-zinc-300">{post.content}</p>
+      <p className="line-clamp-2 text-sm text-zinc-700">{post.content}</p>
     </div>
   );
 }
@@ -78,8 +87,8 @@ function MiniDotRow({ entries }: { entries: DailyStartEntry[] }) {
             <span
               className={`h-3 w-3 rounded-full ${
                 has
-                  ? "bg-emerald-500"
-                  : "border border-zinc-300 dark:border-zinc-600"
+                  ? "bg-[#3d5016]"
+                  : "border border-zinc-400"
               }`}
             />
             <span className="text-[8px] text-zinc-400">{getDayLabel(entry.date)}</span>
@@ -92,14 +101,14 @@ function MiniDotRow({ entries }: { entries: DailyStartEntry[] }) {
 
 // ─── クイック入力ボタン ────────────────────────────────────────
 
-function QuickButton({ href, label, emoji }: { href: string; label: string; emoji: string }) {
+function QuickButton({ href, label, Icon }: { href: string; label: string; Icon: LucideIcon }) {
   return (
     <Link
       href={href}
-      className="flex flex-1 flex-col items-center gap-1 rounded-xl border border-zinc-200 bg-white px-2 py-3 text-center transition-colors hover:bg-zinc-50 active:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+      className="group flex flex-1 flex-col items-center gap-1 border border-zinc-900 bg-[#f0ede6] px-2 py-4 text-center hover:bg-[#3d5016] transition-colors"
     >
-      <span className="text-2xl">{emoji}</span>
-      <span className="text-xs text-zinc-600 dark:text-zinc-300">{label}</span>
+      <Icon size={24} strokeWidth={3} className="text-[#3d5016] group-hover:text-white transition-colors" />
+      <span className="text-xs font-bold uppercase tracking-wide text-zinc-900 group-hover:text-white transition-colors">{label}</span>
     </Link>
   );
 }
@@ -138,47 +147,47 @@ export function DashboardPage() {
   );
 
   return (
-    <div className="mx-auto w-full max-w-md px-4 py-6 flex flex-col gap-6">
+    <div className="mx-auto w-full max-w-md flex flex-col gap-6 py-2">
       {/* ヘッダー */}
       <div>
-        <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">ダッシュボード</h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">{today}</p>
+        <h1 className="text-xl font-black text-zinc-900 text-center w-full">ダッシュボード</h1>
+        <p className="text-sm text-zinc-500">{today}</p>
       </div>
 
       {/* 今日のサマリカード */}
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">今日の記録</h2>
-        <div className="grid grid-cols-2 gap-2">
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-zinc-500">今日の記録</h2>
+        <div className="grid grid-cols-2 gap-0 border border-zinc-900">
           <SummaryCard label="投稿" value={`${data.todayPostCount} 件`} />
           <SummaryCard label="習慣開始" value={`${data.todayHabitStartCount} 回`} />
           <SummaryCard label="運記録" value={`${data.todayLuckCount} 件`} />
-          <SummaryCard label="メタ認知日記" value={data.hasDiary ? "入力済み ✓" : "未入力 —"} />
+          <SummaryCard label="メタ認知日記" value={data.hasDiary ? "済 ✓" : "未 —"} />
         </div>
       </section>
 
       {/* クイック入力 */}
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-zinc-600 dark:text-zinc-400">クイック入力</h2>
-        <div className="flex gap-2">
-          <QuickButton href="/timeline" label="投稿" emoji="📝" />
-          <QuickButton href="/tracker" label="習慣" emoji="✅" />
-          <QuickButton href="/luck" label="運記録" emoji="🍀" />
-          <QuickButton href="/metadiary" label="日記" emoji="📔" />
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-zinc-500">クイック入力</h2>
+        <div className="flex gap-0 border border-zinc-900">
+          <QuickButton href="/timeline" label="投稿" Icon={PenLine} />
+          <QuickButton href="/tracker" label="習慣" Icon={CheckSquare} />
+          <QuickButton href="/luck" label="運記録" Icon={Clover} />
+          <QuickButton href="/metadiary" label="日記" Icon={BookOpen} />
         </div>
       </section>
 
       {/* 直近投稿3件 */}
       <section>
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">直近の投稿</h2>
-          <Link href="/timeline" className="text-xs text-blue-500 hover:underline dark:text-blue-400">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">直近の投稿</h2>
+          <Link href="/timeline" className="text-xs text-[#3d5016] hover:underline">
             すべて見る
           </Link>
         </div>
         {data.recentPosts.length === 0 ? (
           <p className="text-sm text-zinc-400">投稿がありません</p>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-0 border border-zinc-900">
             {data.recentPosts.map((post) => (
               <RecentPostItem key={post.id} post={post} />
             ))}
@@ -190,18 +199,18 @@ export function DashboardPage() {
       {habitStats.length > 0 && (
         <section>
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-zinc-600 dark:text-zinc-400">今週の習慣</h2>
-            <Link href="/tracker" className="text-xs text-blue-500 hover:underline dark:text-blue-400">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">今週の習慣</h2>
+            <Link href="/tracker" className="text-xs text-[#3d5016] hover:underline">
               詳細
             </Link>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-0 border border-zinc-900">
             {habitStats.map(({ habit, stats }) => (
               <div
                 key={habit.id}
-                className="flex items-center justify-between gap-3 rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800/50"
+                className="flex items-center justify-between gap-3 border-b border-zinc-900 px-3 py-2 last:border-b-0"
               >
-                <span className="min-w-0 flex-1 truncate text-sm text-zinc-700 dark:text-zinc-300">
+                <span className="min-w-0 flex-1 truncate text-sm text-zinc-700">
                   {habit.name}
                 </span>
                 <MiniDotRow entries={stats.currentWeek} />

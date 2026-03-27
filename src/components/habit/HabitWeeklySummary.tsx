@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { getHabitStartLogs } from "@/storage";
 import { getHabitWeeklyStats } from "@/lib/habitStats";
 import type { DailyStartEntry } from "@/lib/habitStats";
+import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 // ─── 表示ユーティリティ ───────────────────────────────────────
 
@@ -33,16 +34,16 @@ function HabitStartDotPlot({ entries }: { entries: DailyStartEntry[] }) {
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
                 has
-                  ? "bg-emerald-500 text-white"
-                  : "border border-zinc-300 text-zinc-300 dark:border-zinc-600"
+                  ? "bg-[#3d5016] text-white"
+                  : "border border-zinc-400 text-zinc-400"
               }`}
             >
               {has ? "●" : "○"}
             </span>
-            <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
+            <span className="text-[10px] text-zinc-400">
               {getDayLabel(entry.date)}
             </span>
-            <span className="text-[9px] leading-tight text-zinc-500 dark:text-zinc-400">
+            <span className="text-[9px] leading-tight text-zinc-500">
               {has ? minutesToHHmm(entry.minutesSinceMidnight!) : "\u00A0"}
             </span>
           </div>
@@ -65,19 +66,19 @@ export function HabitWeeklySummary({ habitId }: Props) {
     if (stats.direction === null) return null;
     const abs = Math.abs(stats.diffMinutes!);
     if (stats.direction === "earlier")
-      return <span className="text-emerald-600 dark:text-emerald-400">▲ {abs}分 早まった</span>;
+      return <span className="flex items-center gap-0.5 text-[#3d5016]"><TrendingUp size={12} strokeWidth={3} /> {abs}分 早まった</span>;
     if (stats.direction === "later")
-      return <span className="text-red-500 dark:text-red-400">▼ {abs}分 遅れた</span>;
-    return <span className="text-zinc-400">→ ほぼ同じ</span>;
+      return <span className="flex items-center gap-0.5 text-red-500 dark:text-red-400"><TrendingDown size={12} strokeWidth={3} /> {abs}分 遅れた</span>;
+    return <span className="flex items-center gap-0.5 text-zinc-400"><Minus size={12} strokeWidth={3} /> ほぼ同じ</span>;
   })();
 
   return (
-    <div className="mt-3 rounded-lg border border-zinc-100 bg-zinc-50 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800/50">
+    <div className="mt-3 border border-zinc-200 bg-white px-3 py-2">
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">直近7日</span>
+        <span className="text-xs font-medium text-zinc-500">直近7日</span>
         <div className="flex items-center gap-2 text-xs">
           {stats.currentAvgMinutes !== null && (
-            <span className="text-zinc-700 dark:text-zinc-300">
+            <span className="text-zinc-700">
               平均 {minutesToHHmm(stats.currentAvgMinutes)}
             </span>
           )}
