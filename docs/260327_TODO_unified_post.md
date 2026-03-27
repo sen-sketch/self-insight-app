@@ -20,7 +20,7 @@
 
 ## Phase 1: 型定義の統合 (`src/lib/types.ts`)
 
-- [ ] `Post` 型を新設（下記フィールド）
+- [x] `Post` 型を新設（下記フィールド）
   - `id`, `userId`, `postedAt`（デフォルト現在時刻・変更可）
   - `moodScore: MoodScore | null`（任意）
   - `whatText: string | null`（何をしたか・任意）
@@ -29,9 +29,9 @@
   - `habitTags: string[]`（`Habit.id` の配列）
   - `freeTags: string[]`（自由記載タグ）
   - `createdAt`, `updatedAt`
-- [ ] `CreatePostInput` 型を新設
-- [ ] `UpdatePostInput` 型を新設
-- [ ] 旧型（`TimelinePost`, `LuckRecord`, `MetaDiary`）は移行完了後に削除
+- [x] `CreatePostInput` 型を新設
+- [x] `UpdatePostInput` 型を新設
+- [x] 旧型（`TimelinePost`, `LuckRecord`, `MetaDiary`）は移行完了後に削除
 
 ---
 

@@ -117,3 +117,29 @@ export type UpsertMetaDiaryInput = {
   blockedPointsText: string | null;
   tomorrowPlanText: string;
 };
+
+// ─── 統合投稿 ──────────────────────────────────────────────
+
+export type Post = UserScoped &
+  Timestamped & {
+    id: UUID;
+    postedAt: IsoDateTimeString;
+    moodScore: MoodScore | null;
+    whatText: string | null;
+    resultText: string | null;
+    questionText: string | null;
+    habitTags: UUID[];   // Habit.id の配列
+    freeTags: string[];
+  };
+
+export type CreatePostInput = {
+  postedAt: IsoDateTimeString;
+  moodScore: MoodScore | null;
+  whatText: string | null;
+  resultText: string | null;
+  questionText: string | null;
+  habitTags: UUID[];
+  freeTags: string[];
+};
+
+export type UpdatePostInput = Partial<CreatePostInput>;
