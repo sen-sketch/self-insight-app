@@ -132,7 +132,7 @@ export function UnifiedPostForm({
                     : "bg-zinc-200 text-zinc-500"
                 }`}
               >
-                <Icon size={20} strokeWidth={3} />
+                <Icon size={20} strokeWidth={2.5} />
               </button>
             );
           })}
