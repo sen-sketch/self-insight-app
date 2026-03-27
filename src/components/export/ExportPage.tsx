@@ -6,11 +6,9 @@ import {
   getTimelinePosts,
   getHabits,
   getHabitStartLogs,
-  getLuckRecords,
-  getMetaDiaries,
 } from "@/storage";
-import { buildExportText } from "@/lib/export";
-import type { ExportPeriod, ExportTargets } from "@/lib/export";
+import { buildTimelineExportText, buildHabitExportText } from "@/lib/export";
+import type { ExportPeriod } from "@/lib/export";
 
 const PRESET_DAYS = [
   { label: "直近1日", days: 1 as const },
@@ -43,12 +41,6 @@ async function copyTextWithFallback(text: string): Promise<boolean> {
 }
 
 
-const TARGET_ITEMS = [
-  { key: "timeline", label: "タイムライン" },
-  { key: "habit", label: "習慣記録" },
-  { key: "luck", label: "運を上げる記録" },
-  { key: "metaDiary", label: "メタ認知日記" },
-] as const;
 
 export function ExportPage() {
   const today = toTokyoYmd();
@@ -56,35 +48,31 @@ export function ExportPage() {
   const [fromDate, setFromDate] = useState(() => getRecentDateRange(7).fromDate);
   const [toDate, setToDate] = useState(today);
 
-  const [targets, setTargets] = useState<ExportTargets>({
-    timeline: true,
-    habit: true,
-    luck: true,
-    metaDiary: true,
-  });
-
   const [outputText, setOutputText] = useState("");
-
   const [copied, setCopied] = useState(false);
-
   const [copyError, setCopyError] = useState<string | null>(null);
   const outputRef = useRef<HTMLTextAreaElement | null>(null);
 
-
-  const generate = useCallback(() => {
+  const generateTimeline = useCallback(() => {
     const period: ExportPeriod = { fromDate, toDate };
-    const text = buildExportText({
+    const text = buildTimelineExportText({
       period,
-      targets,
       timelinePosts: getTimelinePosts(),
-      habits: getHabits(),
-      habitLogs: getHabitStartLogs(),
-      luckRecords: getLuckRecords(),
-      metaDiaries: getMetaDiaries(),
     });
     setOutputText(text);
     setCopied(false);
-  }, [fromDate, toDate, targets]);
+  }, [fromDate, toDate]);
+
+  const generateHabit = useCallback(() => {
+    const period: ExportPeriod = { fromDate, toDate };
+    const text = buildHabitExportText({
+      period,
+      habits: getHabits(),
+      habitLogs: getHabitStartLogs(),
+    });
+    setOutputText(text);
+    setCopied(false);
+  }, [fromDate, toDate]);
 
   const handleCopy = useCallback(async () => {
     if (!outputText) return;
@@ -113,10 +101,6 @@ export function ExportPage() {
     const range = getRecentDateRange(days);
     setFromDate(range.fromDate);
     setToDate(range.toDate);
-  };
-
-  const toggleTarget = (key: keyof ExportTargets) => {
-    setTargets((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -160,37 +144,28 @@ export function ExportPage() {
         </div>
       </section>
 
-      {/* ステップ2：出力対象チェックUI */}
+      {/* 出力ボタン */}
       <section className="space-y-3">
         <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">
-          出力対象
+          出力項目
         </h2>
-        <div className="grid grid-cols-2 gap-2">
-          {TARGET_ITEMS.map(({ key, label }) => (
-            <label
-              key={key}
-              className="flex items-center gap-2 cursor-pointer text-sm text-zinc-700"
-            >
-              <input
-                type="checkbox"
-                checked={targets[key]}
-                onChange={() => toggleTarget(key)}
-                className="w-4 h-4 accent-[#3d5016]"
-              />
-              {label}
-            </label>
-          ))}
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={generateTimeline}
+            className="w-full border border-zinc-900 bg-[#3d5016] py-2.5 text-white font-bold hover:bg-[#4a6320] transition-colors"
+          >
+            タイムライン
+          </button>
+          <button
+            type="button"
+            onClick={generateHabit}
+            className="w-full border border-zinc-900 bg-[#3d5016] py-2.5 text-white font-bold hover:bg-[#4a6320] transition-colors"
+          >
+            習慣記録
+          </button>
         </div>
       </section>
-
-      {/* 生成ボタン */}
-      <button
-        type="button"
-        onClick={generate}
-        className="w-full border border-zinc-900 bg-[#3d5016] py-2.5 text-white font-bold hover:bg-[#4a6320] transition-colors"
-      >
-        テキストを生成する
-      </button>
 
       {/* ステップ8：出力欄UI */}
       {outputText && (
@@ -200,15 +175,6 @@ export function ExportPage() {
               出力テキスト
             </h2>
             <div className="flex gap-2">
-
-              <button
-                type="button"
-                onClick={generate}
-                className="px-3 py-1.5 text-sm border border-zinc-900 text-zinc-700 hover:bg-zinc-200 transition-colors"
-              >
-                再生成
-              </button>
-
               <button
                 type="button"
                 onClick={handleCopy}
