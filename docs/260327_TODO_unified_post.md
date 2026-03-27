@@ -86,9 +86,9 @@
 | エクスポート | 設定 |
 | ─ | 出力 |
 
-- [ ] `src/components/layout/BottomNav.tsx` を更新（5タブ構成）
-- [ ] `app/post/page.tsx` を新設（統合投稿フォームページ）
-- [ ] `app/settings/page.tsx` を新設（習慣タスク設定 + 出力カスタム）
+- [x] `src/components/layout/BottomNav.tsx` を更新（5タブ構成）
+- [x] `app/post/page.tsx` を新設（統合投稿フォームページ）
+- [x] `app/settings/page.tsx` を新設（習慣タスク設定 + 出力カスタム）
 
 ---
 

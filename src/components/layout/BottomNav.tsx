@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, PenLine, CheckSquare, Clover, BookOpen, Upload } from "lucide-react";
+import { Home, List, PenLine, Settings, Upload } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const NAV_ITEMS: { href: string; label: string; Icon: LucideIcon }[] = [
   { href: "/",          label: "ホーム",   Icon: Home },
-  { href: "/timeline",  label: "投稿",     Icon: PenLine },
-  { href: "/tracker",   label: "習慣",     Icon: CheckSquare },
-  { href: "/luck",      label: "運記録",   Icon: Clover },
-  { href: "/metadiary", label: "日記",     Icon: BookOpen },
+  { href: "/timeline",  label: "タイムライン", Icon: List },
+  { href: "/post",      label: "投稿",     Icon: PenLine },
+  { href: "/settings",  label: "設定",     Icon: Settings },
   { href: "/export",    label: "出力",     Icon: Upload },
 ];
 
