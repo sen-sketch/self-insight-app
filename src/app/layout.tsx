@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Kosugi_Maru } from "next/font/google";
 import { BottomNav } from "@/components/layout/BottomNav";
-import { MigrationRunner } from "@/components/layout/MigrationRunner";
 import "./globals.css";
 
 const kosugiMaru = Kosugi_Maru({
@@ -33,8 +32,7 @@ export default function RootLayout({
       className={`${kosugiMaru.variable} h-full antialiased`}
     >
       <body className="min-h-dvh bg-[#f0ede6] pb-[calc(56px+env(safe-area-inset-bottom))]">
-        <MigrationRunner />
-        <main className="mx-auto w-full max-w-md px-4 py-5">
+<main className="mx-auto w-full max-w-md px-4 py-5">
           {children}
         </main>
         <BottomNav />

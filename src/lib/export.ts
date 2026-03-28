@@ -1,4 +1,4 @@
-import type { Post, TimelinePost, Habit, HabitStartLog, LuckRecord, MetaDiary } from "@/lib/types";
+import type { Post, Habit, HabitStartLog } from "@/lib/types";
 import { toTokyoYmd, toTokyoHHmm, formatDisplayDateTime } from "@/lib/datetime";
 
 export type ExportPeriod = {
@@ -77,24 +77,6 @@ export function buildPostsExportText(params: {
   return sections.join("\n\n");
 }
 
-// ── ステップ3：タイムライン ──────────────────────────────────
-
-export function formatTimelinePosts(posts: TimelinePost[], period: ExportPeriod): string {
-  const filtered = posts
-    .filter((p) => isInPeriod(p.postedAt, period.fromDate, period.toDate))
-    .sort((a, b) => a.postedAt.localeCompare(b.postedAt));
-
-  if (filtered.length === 0) return "（この期間の投稿はありません）";
-
-  return filtered.map((p) => {
-    const lines = [
-      `【${formatDisplayDateTime(p.postedAt)}】気分: ${MOOD_LABELS[p.moodScore] ?? p.moodScore}`,
-      p.content,
-    ];
-    if (p.tags.length > 0) lines.push(`タグ: ${p.tags.join(", ")}`);
-    return lines.join("\n");
-  }).join("\n\n");
-}
 
 // ── ステップ4：習慣記録 ──────────────────────────────────────
 
@@ -130,75 +112,6 @@ export function formatHabitLogs(
   return lines.join("\n");
 }
 
-// ── ステップ5：運記録 ────────────────────────────────────────
-
-export function formatLuckRecords(records: LuckRecord[], period: ExportPeriod): string {
-  const filtered = records
-    .filter((r) => isInPeriod(r.recordedAt, period.fromDate, period.toDate))
-    .sort((a, b) => a.recordedAt.localeCompare(b.recordedAt));
-
-  if (filtered.length === 0) return "（この期間の運記録はありません）";
-
-  return filtered.map((r) => {
-    const lines = [
-      `【${formatDisplayDateTime(r.recordedAt)}】`,
-      `チャレンジ: ${r.challengeText}`,
-      `感情: ${r.emotionText}`,
-    ];
-    if (r.insightText) lines.push(`洞察: ${r.insightText}`);
-    if (r.nextActionText) lines.push(`次のアクション: ${r.nextActionText}`);
-    return lines.join("\n");
-  }).join("\n\n");
-}
-
-// ── ステップ6：メタ認知日記 ──────────────────────────────────
-
-export function formatMetaDiaries(diaries: MetaDiary[], period: ExportPeriod): string {
-  const filtered = diaries
-    .filter((d) => isInPeriod(d.diaryDate, period.fromDate, period.toDate))
-    .sort((a, b) => a.diaryDate.localeCompare(b.diaryDate));
-
-  if (filtered.length === 0) return "（この期間の日記はありません）";
-
-  return filtered.map((d) => {
-    const lines = [
-      `【${d.diaryDate}】`,
-      `目標: ${d.goalText}`,
-      `やったこと: ${d.actualText}`,
-    ];
-    if (d.blockedPointsText) lines.push(`詰まったこと: ${d.blockedPointsText}`);
-    lines.push(`明日の予定: ${d.tomorrowPlanText}`);
-    return lines.join("\n");
-  }).join("\n\n");
-}
-
-// ── 個別エクスポート：タイムライン ───────────────────────────
-
-export function buildTimelineExportText(params: {
-  period: ExportPeriod;
-  timelinePosts: TimelinePost[];
-}): string {
-  const { period, timelinePosts } = params;
-  const sections: string[] = [];
-
-  sections.push(`## タイムライン（${period.fromDate} 〜 ${period.toDate}）`);
-  sections.push(formatTimelinePosts(timelinePosts, period));
-  sections.push(
-    `上記は${period.fromDate}〜${period.toDate}までの感情ログです。\n` +
-    `要約して、以下の形式で出力してください。\n\n` +
-    `【頻度が高い感情TOP5】\n1.\n2.\n3.\n4.\n5.\n` +
-    `【強度が高い感情TOP3】\n1.\n2.\n3.\n\n` +
-    `高頻度X高強度＝最優先で対策\n\n` +
-    `【トリガーの共通点】\n・\n` +
-    `【感情の連鎖パターン】\n・\n` +
-    `【来週の小さな実験】（以下の項目は人間が記入）\n` +
-    `・減らしたい感情：\n・小さな実験：\n・実行した後の感情：\n` +
-    `・増やしたい感情：\n・小さな実験：\n・実行した後の感情：`
-  );
-
-  return sections.join("\n\n");
-}
-
 // ── 個別エクスポート：習慣記録 ───────────────────────────────
 
 export function buildHabitExportText(params: {
@@ -215,43 +128,3 @@ export function buildHabitExportText(params: {
   return sections.join("\n\n");
 }
 
-// ── ステップ7：統合テキスト生成 ──────────────────────────────
-
-export function buildExportText(params: {
-  period: ExportPeriod;
-  targets: ExportTargets;
-  timelinePosts: TimelinePost[];
-  habits: Habit[];
-  habitLogs: HabitStartLog[];
-  luckRecords: LuckRecord[];
-  metaDiaries: MetaDiary[];
-}): string {
-  const { period, targets, timelinePosts, habits, habitLogs, luckRecords, metaDiaries } = params;
-  const sections: string[] = [];
-
-  sections.push(`## 自己観察データ（${period.fromDate} 〜 ${period.toDate}）`);
-
-  if (targets.timeline) {
-    sections.push(`### タイムライン投稿\n${formatTimelinePosts(timelinePosts, period)}`);
-  }
-  if (targets.habit) {
-    sections.push(`### 習慣記録\n${formatHabitLogs(habits, habitLogs, period)}`);
-  }
-  if (targets.luck) {
-    sections.push(`### 運を上げる記録\n${formatLuckRecords(luckRecords, period)}`);
-  }
-  if (targets.metaDiary) {
-    sections.push(`### メタ認知日記\n${formatMetaDiaries(metaDiaries, period)}`);
-  }
-
-  sections.push(
-    `---\n以上のデータをもとに、以下の観点で分析してください。\n` +
-    `1. この期間の行動・感情パターンの傾向\n` +
-    `2. 繰り返しているポジティブな行動や思考\n` +
-    `3. 繰り返しているネガティブな行動や思考\n` +
-    `4. 改善できそうな具体的な行動提案\n` +
-    `5. 来週に向けてのアドバイス`
-  );
-
-  return sections.join("\n\n");
-}
