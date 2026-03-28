@@ -210,7 +210,7 @@ export function UnifiedPostForm({
                   className={`border px-3 py-1 text-xs font-medium transition-colors ${
                     isSelected
                       ? "border-[#3d5016] bg-[#3d5016] text-white"
-                      : "border-zinc-400 text-zinc-600 hover:border-[#3d5016] hover:text-[#3d5016]"
+                      : "border-zinc-400 bg-white text-zinc-600 hover:border-[#3d5016] hover:text-[#3d5016]"
                   }`}
                 >
                   {habit.name}
