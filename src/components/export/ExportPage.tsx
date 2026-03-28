@@ -7,9 +7,9 @@ import { buildPostsExportText } from "@/lib/export";
 import type { ExportPeriod } from "@/lib/export";
 
 const PRESET_DAYS = [
-  { label: "直近1日", days: 1 as const },
-  { label: "直近7日", days: 7 as const },
-  { label: "直近30日", days: 30 as const },
+  { label: "1日", days: 1 as const },
+  { label: "7日", days: 7 as const },
+  { label: "30日", days: 30 as const },
 ];
 
 async function copyTextWithFallback(text: string): Promise<boolean> {
