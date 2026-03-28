@@ -111,10 +111,10 @@ export function DashboardPage() {
         <div className="flex gap-0 border border-zinc-900">
           <Link
             href="/post"
-            className="group flex flex-1 flex-col items-center gap-1 border border-zinc-900 bg-[#f0ede6] px-2 py-4 text-center hover:bg-[#3d5016] transition-colors"
+            className="flex flex-1 flex-col items-center gap-1 border border-zinc-900 bg-[#3d5016] px-2 py-4 text-center"
           >
-            <PenLine size={24} strokeWidth={3} className="text-[#3d5016] group-hover:text-white transition-colors" />
-            <span className="text-xs font-bold uppercase tracking-wide text-zinc-900 group-hover:text-white transition-colors">投稿</span>
+            <PenLine size={24} strokeWidth={3} className="text-white" />
+            <span className="text-xs font-bold uppercase tracking-wide text-white">投稿</span>
           </Link>
         </div>
       </section>
