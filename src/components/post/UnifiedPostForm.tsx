@@ -109,7 +109,7 @@ export function UnifiedPostForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 border border-zinc-200 bg-white p-4"
+      className="flex flex-col gap-4 bg-[#f0ede6] p-4"
     >
       {/* 気分スコア（任意） */}
       <div className="flex flex-col gap-1">
@@ -153,7 +153,7 @@ export function UnifiedPostForm({
           value={whatText}
           onChange={(e) => setWhatText(e.target.value)}
           placeholder="目標・行動・食事内容・トレーニング内容など"
-          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+          className="border border-zinc-900 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -171,7 +171,7 @@ export function UnifiedPostForm({
           value={resultText}
           onChange={(e) => setResultText(e.target.value)}
           placeholder="うまくいったこと・難しかったこと"
-          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+          className="border border-zinc-900 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -189,7 +189,7 @@ export function UnifiedPostForm({
           value={questionText}
           onChange={(e) => setQuestionText(e.target.value)}
           placeholder="なぜうまく行ったのか？結果が出ないパターンの共通点は何か？その感情の裏にある前提は？"
-          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+          className="border border-zinc-900 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -210,7 +210,7 @@ export function UnifiedPostForm({
                   className={`border px-3 py-1 text-xs font-medium transition-colors ${
                     isSelected
                       ? "border-[#3d5016] bg-[#3d5016] text-white"
-                      : "border-zinc-400 text-zinc-600 hover:border-[#3d5016] hover:text-[#3d5016]"
+                      : "border-zinc-400 bg-white text-zinc-600 hover:border-[#3d5016] hover:text-[#3d5016]"
                   }`}
                 >
                   {habit.name}
@@ -235,7 +235,7 @@ export function UnifiedPostForm({
           value={freeTagsInput}
           onChange={(e) => setFreeTagsInput(e.target.value)}
           placeholder="例: 仕事, 感情, 振り返り"
-          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+          className="border border-zinc-900 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 
@@ -252,7 +252,7 @@ export function UnifiedPostForm({
           type="datetime-local"
           value={postedAt}
           onChange={(e) => setPostedAt(e.target.value)}
-          className="border border-zinc-900 bg-transparent px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+          className="border border-zinc-900 bg-white px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
         />
       </div>
 

@@ -42,7 +42,7 @@ export function TimelineFilters({
             value={fromDate}
             onChange={(e) => onFromDateChange(e.target.value)}
             aria-label="開始日"
-            className="flex-1 border border-zinc-900 bg-transparent px-2 py-1.5 text-center text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016] [&::-webkit-datetime-edit]:text-center [&::-webkit-datetime-edit-fields-wrapper]:w-full"
+            className="flex-1 border border-zinc-900 bg-white px-2 py-1.5 text-center text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016] [&::-webkit-datetime-edit]:text-center [&::-webkit-datetime-edit-fields-wrapper]:w-full"
             />
             <span className="text-xs text-zinc-400">〜</span>
             <input
@@ -50,7 +50,7 @@ export function TimelineFilters({
             value={toDate}
             onChange={(e) => onToDateChange(e.target.value)}
             aria-label="終了日"
-            className="flex-1 border border-zinc-900 bg-transparent px-2 py-1.5 text-center text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016] [&::-webkit-datetime-edit]:text-center [&::-webkit-datetime-edit-fields-wrapper]:w-full"
+            className="flex-1 border border-zinc-900 bg-white px-2 py-1.5 text-center text-xs text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016] [&::-webkit-datetime-edit]:text-center [&::-webkit-datetime-edit-fields-wrapper]:w-full"
             />
         </div>
 
@@ -64,7 +64,7 @@ export function TimelineFilters({
                 className={`px-2 py-0.5 text-xs font-medium transition-colors border ${
                     tagFilter === tag
                     ? "border-[#3d5016] bg-[#3d5016] text-white"
-                    : "border-zinc-900 text-zinc-700 hover:bg-zinc-200"
+                    : "border-zinc-900 bg-white text-zinc-700 hover:bg-zinc-200"
                 }`}
                 >
                 #{tag}

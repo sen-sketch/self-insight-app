@@ -20,9 +20,7 @@ export function PostPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-center text-base font-bold text-zinc-900">新規投稿</h1>
-
-      {submitted && (
+{submitted && (
         <p className="border border-[#3d5016] bg-[#f0ede6] px-3 py-2 text-center text-sm font-medium text-[#3d5016]">
           投稿しました
         </p>
