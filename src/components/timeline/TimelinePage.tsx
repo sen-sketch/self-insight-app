@@ -6,32 +6,23 @@ import { useState } from "react";
 import type { Post, CreatePostInput, Habit } from "@/lib/types";
 import {
   getPosts,
-  addPost,
   updatePost,
   deletePost,
   getHabits,
 } from "@/storage";
 import { toTokyoYmd } from "@/lib/datetime";
-import { UnifiedPostForm } from "@/components/post/UnifiedPostForm";
 import { PostList } from "@/components/post/PostList";
 import { TimelineFilters } from "./TimelineFilters";
 
 export function TimelinePage() {
   const [posts, setPosts] = useState<Post[]>(() => getPosts());
   const [habits] = useState<Habit[]>(() => getHabits());
-  const [showForm, setShowForm] = useState(false);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [tagFilter, setTagFilter] = useState("");
 
   function reload() {
     setPosts(getPosts());
-  }
-
-  function handleAdd(data: CreatePostInput) {
-    addPost(data);
-    reload();
-    setShowForm(false);
   }
 
   function handleUpdate(id: string, data: CreatePostInput) {
@@ -58,23 +49,6 @@ export function TimelinePage() {
 
   return (
     <div className="flex flex-col gap-4 px-4 py-6">
-      <div className="relative flex items-center">
-<button
-          onClick={() => setShowForm((prev) => !prev)}
-          className="absolute right-0 border border-zinc-900 bg-[#3d5016] px-3 py-1.5 text-sm font-bold text-white transition-colors hover:bg-[#4a6320]"
-        >
-          {showForm ? "閉じる" : "+ 投稿"}
-        </button>
-      </div>
-
-      {showForm && (
-        <UnifiedPostForm
-          habits={habits}
-          onSubmit={handleAdd}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
-
       <TimelineFilters
         fromDate={fromDate}
         toDate={toDate}

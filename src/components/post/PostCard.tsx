@@ -44,25 +44,55 @@ export function PostCard({ post, habits, onUpdate, onDelete }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-2 border border-zinc-200 bg-white p-4">
-      {/* ヘッダー */}
+    <div className="flex flex-col gap-2 bg-[#f0ede6] px-4 py-3">
+      {/* ヘッダー: moodアイコン + タグ */}
+      <div className="flex items-center gap-2">
+        {post.moodScore !== null && (() => {
+          const Icon = MOOD_ICONS[post.moodScore];
+          return (
+            <Icon
+              size={20}
+              strokeWidth={3}
+              aria-label={`気分スコア ${post.moodScore}`}
+              className="text-[#3d5016]"
+            />
+          );
+        })()}
+        {(post.habitTags.length > 0 || post.freeTags.length > 0) && (
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            {post.habitTags.map((id) => {
+              const name = habitNameMap.get(id) ?? id;
+              return (
+                <span key={id} className="text-base font-bold text-[#3d5016]">
+                  {name}
+                </span>
+              );
+            })}
+            {post.freeTags.map((tag) => (
+              <span key={tag} className="text-base font-bold text-zinc-600">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* 内容のみ（ラベルなし） */}
+      {post.whatText && (
+        <p className="whitespace-pre-wrap text-sm text-zinc-800">{post.whatText}</p>
+      )}
+      {post.resultText && (
+        <p className="whitespace-pre-wrap text-sm text-zinc-800">{post.resultText}</p>
+      )}
+      {post.questionText && (
+        <p className="whitespace-pre-wrap text-sm text-zinc-800">{post.questionText}</p>
+      )}
+
+      {/* フッター: 日付 + 編集・削除 */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {post.moodScore !== null && (() => {
-            const Icon = MOOD_ICONS[post.moodScore];
-            return (
-              <Icon
-                size={20}
-                strokeWidth={3}
-                aria-label={`気分スコア ${post.moodScore}`}
-                className="text-[#3d5016]"
-              />
-            );
-          })()}
-          <span className="text-xs text-zinc-400">
-            {formatDisplayDateTime(post.postedAt)}
-          </span>
-        </div>
+        <span className="text-xs text-zinc-400">
+          {formatDisplayDateTime(post.postedAt)}
+        </span>
         <div className="flex gap-1">
           <button
             onClick={() => setIsEditing(true)}
@@ -80,55 +110,6 @@ export function PostCard({ post, habits, onUpdate, onDelete }: Props) {
           </button>
         </div>
       </div>
-
-      {/* 何をしたか */}
-      {post.whatText && (
-        <div className="flex flex-col gap-0.5">
-          <span className="text-xs font-medium text-zinc-400">何をしたか</span>
-          <p className="whitespace-pre-wrap text-sm text-zinc-800">{post.whatText}</p>
-        </div>
-      )}
-
-      {/* 結果・気づき */}
-      {post.resultText && (
-        <div className="flex flex-col gap-0.5">
-          <span className="text-xs font-medium text-zinc-400">結果・気づき</span>
-          <p className="whitespace-pre-wrap text-sm text-zinc-800">{post.resultText}</p>
-        </div>
-      )}
-
-      {/* 疑問と考察 */}
-      {post.questionText && (
-        <div className="flex flex-col gap-0.5">
-          <span className="text-xs font-medium text-zinc-400">疑問と考察</span>
-          <p className="whitespace-pre-wrap text-sm text-zinc-800">{post.questionText}</p>
-        </div>
-      )}
-
-      {/* 習慣タグ + 自由タグ */}
-      {(post.habitTags.length > 0 || post.freeTags.length > 0) && (
-        <div className="flex flex-wrap gap-1">
-          {post.habitTags.map((id) => {
-            const name = habitNameMap.get(id) ?? id;
-            return (
-              <span
-                key={id}
-                className="border border-[#3d5016] bg-[#3d5016]/10 px-2 py-0.5 text-xs font-medium text-[#3d5016]"
-              >
-                {name}
-              </span>
-            );
-          })}
-          {post.freeTags.map((tag) => (
-            <span
-              key={tag}
-              className="border border-zinc-400 px-2 py-0.5 text-xs font-medium text-zinc-600"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-      )}
 
       {/* 削除確認 */}
       {isConfirmingDelete && (

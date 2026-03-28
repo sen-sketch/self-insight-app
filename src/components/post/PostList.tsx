@@ -20,7 +20,7 @@ export function PostList({ posts, habits, onUpdate, onDelete }: Props) {
   }
 
   return (
-    <ul className="flex flex-col gap-3">
+    <ul className="flex flex-col divide-y divide-zinc-200 border-t border-b border-zinc-200">
       {posts.map((post) => (
         <li key={post.id}>
           <PostCard
