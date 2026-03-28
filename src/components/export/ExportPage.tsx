@@ -43,6 +43,7 @@ export function ExportPage() {
 
   const [fromDate, setFromDate] = useState(() => getRecentDateRange(7).fromDate);
   const [toDate, setToDate] = useState(today);
+  const [selectedDays, setSelectedDays] = useState<1 | 7 | 30>(7);
 
   const [outputText, setOutputText] = useState("");
   const [copied, setCopied] = useState(false);
@@ -87,6 +88,7 @@ export function ExportPage() {
     const range = getRecentDateRange(days);
     setFromDate(range.fromDate);
     setToDate(range.toDate);
+    setSelectedDays(days);
   };
 
   return (
@@ -104,7 +106,11 @@ export function ExportPage() {
               key={days}
               type="button"
               onClick={() => handlePreset(days)}
-              className="px-3 py-1.5 text-sm border border-zinc-900 text-zinc-700 hover:bg-zinc-200 transition-colors"
+              className={`px-3 py-1.5 text-sm border border-zinc-900 font-bold transition-colors ${
+                selectedDays === days
+                  ? "bg-[#3d5016] text-white hover:bg-[#4a6320]"
+                  : "bg-white text-zinc-700 hover:bg-zinc-200"
+              }`}
             >
               {label}
             </button>
@@ -116,7 +122,7 @@ export function ExportPage() {
             value={fromDate}
             max={toDate}
             onChange={(e) => setFromDate(e.target.value)}
-            className="border border-zinc-900 bg-transparent px-2 py-1.5 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+            className="border border-zinc-900 bg-white px-2 py-1.5 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
           />
           <span className="text-zinc-500">〜</span>
           <input
@@ -125,7 +131,7 @@ export function ExportPage() {
             min={fromDate}
             max={today}
             onChange={(e) => setToDate(e.target.value)}
-            className="border border-zinc-900 bg-transparent px-2 py-1.5 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
+            className="border border-zinc-900 bg-white px-2 py-1.5 text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#3d5016]"
           />
         </div>
       </section>

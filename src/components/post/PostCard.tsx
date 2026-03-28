@@ -53,6 +53,7 @@ export function PostCard({ post, habits, onUpdate, onDelete }: Props) {
             <Icon
               size={20}
               strokeWidth={3}
+              fill="white"
               aria-label={`気分スコア ${post.moodScore}`}
               className="text-[#3d5016]"
             />
@@ -99,7 +100,7 @@ export function PostCard({ post, habits, onUpdate, onDelete }: Props) {
             title="編集"
             className="p-1 text-[#3d5016] transition-colors hover:bg-zinc-200"
           >
-            <Pencil size={14} strokeWidth={3} />
+            <Pencil size={14} strokeWidth={3} fill="white" />
           </button>
           <button
             onClick={() => setIsConfirmingDelete(true)}
