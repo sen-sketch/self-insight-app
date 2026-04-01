@@ -12,9 +12,10 @@ type Props = {
   onDelete: (id: string) => void;
   onToggleActive: (id: string, isActive: boolean) => void;
   onLogStart?: (habitId: string, note: string | null) => void;
+  settingsMode?: boolean;
 };
 
-export function HabitList({ habits, logs, onUpdate, onReorder, onDelete, onToggleActive, onLogStart }: Props) {
+export function HabitList({ habits, logs, onUpdate, onReorder, onDelete, onToggleActive, onLogStart, settingsMode = false }: Props) {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dropIndex, setDropIndex] = useState<number | null>(null);
 
@@ -205,6 +206,7 @@ export function HabitList({ habits, logs, onUpdate, onReorder, onDelete, onToggl
               onDelete={onDelete}
               onToggleActive={onToggleActive}
               onLogStart={onLogStart}
+              settingsMode={settingsMode}
             />
           </div>
         </div>

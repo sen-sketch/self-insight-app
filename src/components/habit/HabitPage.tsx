@@ -98,6 +98,7 @@ export function HabitPage({ showTracker = true }: Props) {
         onDelete={handleDelete}
         onToggleActive={handleToggleActive}
         onLogStart={showTracker ? handleLogStart : undefined}
+        settingsMode={!showTracker}
       />
     </div>
   );

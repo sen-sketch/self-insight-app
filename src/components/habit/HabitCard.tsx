@@ -21,9 +21,10 @@ type Props = {
   onDelete: (id: string) => void;
   onToggleActive: (id: string, isActive: boolean) => void;
   onLogStart?: (habitId: string, note: string | null) => void;
+  settingsMode?: boolean;
 };
 
-export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onLogStart }: Props) {
+export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onLogStart, settingsMode = false }: Props) {
   const [editing, setEditing] = useState(false);
   const [showWeekly, setShowWeekly] = useState(false);
   const [showNoteInput, setShowNoteInput] = useState(false);
@@ -74,10 +75,10 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
 
       {/* 右列: 目標・カレンダー・ボタン（右寄せ） */}
       <div className="flex flex-col items-end gap-0.5">
-        {habit.targetStartTime && (
+        {!settingsMode && habit.targetStartTime && (
           <span className="text-xs text-zinc-400">目標: {habit.targetStartTime}</span>
         )}
-        {habit.isActive && (showWeekly || !onLogStart) && <HabitWeeklySummary habitId={habit.id} />}
+        {!settingsMode && habit.isActive && (showWeekly || !onLogStart) && <HabitWeeklySummary habitId={habit.id} />}
 
         {/* メモ入力（展開時） */}
         {habit.isActive && onLogStart && showNoteInput && (
@@ -140,18 +141,20 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
                   メモ
                 </button>
               )}
-              {avgMinutes !== null && (
+              {!settingsMode && avgMinutes !== null && (
                 <span className="text-xs tabular-nums text-zinc-400">
                   {minutesToHHmm(avgMinutes)}
                 </span>
               )}
-              <button
-                onClick={() => setShowWeekly((prev) => !prev)}
-                title="週次サマリー"
-                className={`p-1.5 hover:text-zinc-700 ${showWeekly ? "text-zinc-700" : "text-zinc-400"}`}
-              >
-                <BarChart2 size={14} strokeWidth={1.5} />
-              </button>
+              {!settingsMode && (
+                <button
+                  onClick={() => setShowWeekly((prev) => !prev)}
+                  title="週次サマリー"
+                  className={`p-1.5 hover:text-zinc-700 ${showWeekly ? "text-zinc-700" : "text-zinc-400"}`}
+                >
+                  <BarChart2 size={14} strokeWidth={1.5} />
+                </button>
+              )}
               <button
                 onClick={() => setActionsExpanded(true)}
                 title="編集"
