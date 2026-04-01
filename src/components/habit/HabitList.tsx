@@ -180,7 +180,7 @@ export function HabitList({ habits, logs, onUpdate, onReorder, onDelete, onToggl
             dropIndex === index && dragIndex !== index ? "ring-2 ring-[#3d5016] ring-inset" : "",
           ].filter(Boolean).join(" ")}
         >
-          {habit.isActive && (
+          {settingsMode && habit.isActive && (
             <div
               draggable
               onDragStart={(e) => handleDragStart(e, index)}

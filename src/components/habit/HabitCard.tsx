@@ -1,18 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { CreateHabitInput, Habit, HabitStartLog } from "@/lib/types";
 import { HabitForm } from "./HabitForm";
 import { HabitWeeklySummary } from "./HabitWeeklySummary";
 import { toTokyoYmd, toTokyoHHmm } from "@/lib/datetime";
-import { getHabitWeeklyStats } from "@/lib/habitStats";
-import { Pencil, Trash2, BarChart2, X } from "lucide-react";
-
-function minutesToHHmm(minutes: number): string {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-}
+import { Pencil, Trash2, X } from "lucide-react";
 
 type Props = {
   habit: Habit;
@@ -26,15 +19,9 @@ type Props = {
 
 export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onLogStart, settingsMode = false }: Props) {
   const [editing, setEditing] = useState(false);
-  const [showWeekly, setShowWeekly] = useState(false);
   const [showNoteInput, setShowNoteInput] = useState(false);
   const [note, setNote] = useState("");
   const [actionsExpanded, setActionsExpanded] = useState(false);
-
-  const avgMinutes = useMemo(
-    () => getHabitWeeklyStats(logs, habit.id).currentAvgMinutes,
-    [logs, habit.id]
-  );
 
   function handleUpdate(data: CreateHabitInput) {
     onUpdate(habit.id, data);
@@ -62,25 +49,23 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
     );
   }
 
-  return (
-    <div
-      className={`flex gap-2 bg-white px-3 py-2 transition-opacity ${
-        !habit.isActive ? "opacity-50" : ""
-      }`}
-    >
-      {/* 左列: 名前（上下中央） */}
-      <div className="flex flex-1 min-w-0 items-center">
-        <span className="truncate text-sm font-semibold text-zinc-900">{habit.name}</span>
-      </div>
+  // ─── ダッシュボードモード ───────────────────────────────────
+  if (!settingsMode) {
+    const todayYmd = toTokyoYmd(new Date().toISOString());
+    const todayLogs = logs
+      .filter((l) => toTokyoYmd(l.startedAt) === todayYmd)
+      .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
 
-      {/* 右列: 目標・カレンダー・ボタン（右寄せ） */}
-      <div className="flex flex-col items-end gap-0.5">
-        {!settingsMode && habit.targetStartTime && (
-          <span className="text-xs text-zinc-400">目標: {habit.targetStartTime}</span>
+    return (
+      <div className={`bg-white px-3 py-2 transition-opacity ${!habit.isActive ? "opacity-50" : ""}`}>
+        {/* 週次サマリー3行（アクティブ習慣のみ） */}
+        {habit.isActive ? (
+          <HabitWeeklySummary habitId={habit.id} habitName={habit.name} logs={logs} />
+        ) : (
+          <span className="truncate text-sm font-semibold text-zinc-900">{habit.name}</span>
         )}
-        {!settingsMode && habit.isActive && (showWeekly || !onLogStart) && <HabitWeeklySummary habitId={habit.id} />}
 
-        {/* メモ入力（展開時） */}
+        {/* メモ入力 */}
         {habit.isActive && onLogStart && showNoteInput && (
           <div className="mt-1 flex flex-col gap-2">
             <input
@@ -108,69 +93,56 @@ export function HabitCard({ habit, logs, onUpdate, onDelete, onToggleActive, onL
           </div>
         )}
 
-        {/* 時刻チップ */}
-        {habit.isActive && onLogStart && (() => {
-          const todayYmd = toTokyoYmd(new Date().toISOString());
-          const todayLogs = logs
-            .filter((l) => toTokyoYmd(l.startedAt) === todayYmd)
-            .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
-          if (todayLogs.length === 0) return null;
-          return (
-            <div className="mt-1 flex flex-wrap justify-end gap-1">
-              {todayLogs.map((l) => (
-                <span
-                  key={l.id}
-                  className="bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-500"
-                >
-                  {toTokyoHHmm(l.startedAt)}{l.note ? ` · ${l.note}` : ""}
-                </span>
-              ))}
-            </div>
-          );
-        })()}
+        {/* 本日の記録チップ */}
+        {habit.isActive && onLogStart && todayLogs.length > 0 && (
+          <div className="mt-1 flex flex-wrap justify-end gap-1">
+            {todayLogs.map((l) => (
+              <span key={l.id} className="bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-500">
+                {toTokyoHHmm(l.startedAt)}{l.note ? ` · ${l.note}` : ""}
+              </span>
+            ))}
+          </div>
+        )}
 
-        {/* ボタン群 */}
+        {/* アクションボタン */}
+        <div className="mt-1 flex items-center justify-end gap-1.5">
+          {habit.isActive && onLogStart && !showNoteInput && (
+            <button
+              onClick={() => setShowNoteInput(true)}
+              className="px-2 py-1 text-xs text-zinc-400 hover:text-zinc-600"
+            >
+              メモ
+            </button>
+          )}
+          {habit.isActive && onLogStart && (
+            <button
+              onClick={() => onLogStart(habit.id, null)}
+              className="bg-[#3d5016] px-3 py-1 text-xs font-bold text-white hover:bg-[#4a6320] active:bg-[#2e3d10]"
+            >
+              開始
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ─── 設定モード ────────────────────────────────────────────
+  return (
+    <div className={`flex gap-2 bg-white px-3 py-2 transition-opacity ${!habit.isActive ? "opacity-50" : ""}`}>
+      <div className="flex flex-1 min-w-0 items-center">
+        <span className="truncate text-sm font-semibold text-zinc-900">{habit.name}</span>
+      </div>
+      <div className="flex flex-col items-end gap-0.5">
         <div className="flex items-center gap-1.5">
           {!actionsExpanded ? (
-            <>
-              {habit.isActive && onLogStart && !showNoteInput && (
-                <button
-                  onClick={() => setShowNoteInput(true)}
-                  className="px-2 py-1 text-xs text-zinc-400 hover:text-zinc-600"
-                >
-                  メモ
-                </button>
-              )}
-              {!settingsMode && avgMinutes !== null && (
-                <span className="text-xs tabular-nums text-zinc-400">
-                  {minutesToHHmm(avgMinutes)}
-                </span>
-              )}
-              {!settingsMode && (
-                <button
-                  onClick={() => setShowWeekly((prev) => !prev)}
-                  title="週次サマリー"
-                  className={`p-1.5 hover:text-zinc-700 ${showWeekly ? "text-zinc-700" : "text-zinc-400"}`}
-                >
-                  <BarChart2 size={14} strokeWidth={1.5} />
-                </button>
-              )}
-              <button
-                onClick={() => setActionsExpanded(true)}
-                title="編集"
-                className="p-1.5 text-zinc-400 hover:text-zinc-700"
-              >
-                <Pencil size={14} strokeWidth={1.5} />
-              </button>
-              {habit.isActive && onLogStart && (
-                <button
-                  onClick={() => onLogStart(habit.id, null)}
-                  className="bg-[#3d5016] px-3 py-1 text-xs font-bold text-white hover:bg-[#4a6320] active:bg-[#2e3d10]"
-                >
-                  開始
-                </button>
-              )}
-            </>
+            <button
+              onClick={() => setActionsExpanded(true)}
+              title="編集"
+              className="p-1.5 text-zinc-400 hover:text-zinc-700"
+            >
+              <Pencil size={14} strokeWidth={1.5} />
+            </button>
           ) : (
             <>
               <button
