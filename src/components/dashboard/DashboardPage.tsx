@@ -31,7 +31,7 @@ function SummaryCard({ label, value }: SummaryCardProps) {
   return (
     <div className="flex flex-col border border-zinc-200 bg-white px-4 py-3">
       <span className="text-xs font-bold uppercase tracking-widest text-zinc-500">{label}</span>
-      <span className="mt-1 text-3xl font-black text-zinc-900">{value}</span>
+      <span className="mt-1 text-3xl font-black text-zinc-900 self-center">{value}</span>
     </div>
   );
 }
@@ -119,10 +119,10 @@ export function DashboardPage() {
         </div>
       </section>
 
-      {/* 今日の習慣トラッカー */}
+      {/* 今週の習慣トラッカー */}
       <section>
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">今日の習慣トラッカー</h2>
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">今週の習慣トラッカー</h2>
           <button
             onClick={() => setShowHabitForm((prev) => !prev)}
             className="text-xs text-[#3d5016] hover:underline"
