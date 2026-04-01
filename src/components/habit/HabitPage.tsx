@@ -72,6 +72,34 @@ export function HabitPage({ showTracker = true }: Props) {
   }
 
 
+  if (!showTracker) {
+    return (
+      <div className="flex flex-col gap-3 px-4 py-5">
+        {showForm ? (
+          <HabitForm onSubmit={handleAdd} onCancel={() => setShowForm(false)} />
+        ) : (
+          <button
+            onClick={() => setShowForm(true)}
+            className="flex w-full items-center justify-center gap-1 bg-[#3d5016] py-4 text-sm font-bold text-white"
+          >
+            ＋ 習慣を追加する
+          </button>
+        )}
+
+        <HabitList
+          habits={habits}
+          logs={logs}
+          onReorder={handleReorder}
+          onUpdate={handleUpdate}
+          onDelete={handleDelete}
+          onToggleActive={handleToggleActive}
+          onLogStart={undefined}
+          settingsMode={true}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-3 px-4 py-5">
       <div className="relative flex items-center py-1">
@@ -97,8 +125,8 @@ export function HabitPage({ showTracker = true }: Props) {
         onUpdate={handleUpdate}
         onDelete={handleDelete}
         onToggleActive={handleToggleActive}
-        onLogStart={showTracker ? handleLogStart : undefined}
-        settingsMode={!showTracker}
+        onLogStart={handleLogStart}
+        settingsMode={false}
       />
     </div>
   );
