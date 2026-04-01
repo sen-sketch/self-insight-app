@@ -58,7 +58,7 @@ function getTokyoDateParts(input: DateInput): TokyoDateParts {
     return { year, month, day };
 }
 
-function shiftYmd(ymd: string, diffDays: number): string {
+export function shiftYmd(ymd: string, diffDays: number): string {
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd);
     if (!match) throw new Error(`Invalid YYYY-MM-DD: ${ymd}`);
 
