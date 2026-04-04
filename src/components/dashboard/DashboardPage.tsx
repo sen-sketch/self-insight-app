@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   getPosts,
@@ -38,10 +38,19 @@ function SummaryCard({ label, value }: SummaryCardProps) {
 
 export function DashboardPage() {
   const [today] = useState(() => toTokyoYmd());
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [logs, setLogs] = useState<HabitStartLog[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isReady, setIsReady] = useState(false);
 
-  const [habits, setHabits] = useState<Habit[]>(() => getHabits());
-  const [logs, setLogs] = useState<HabitStartLog[]>(() => getHabitStartLogs());
-  const [posts, setPosts] = useState<Post[]>(() => getPosts());
+  useEffect(() => {
+    startTransition(() => {
+      setHabits(getHabits());
+      setLogs(getHabitStartLogs());
+      setPosts(getPosts());
+      setIsReady(true);
+    });
+  }, []);
 
   const todayPosts = posts.filter((p) => toTokyoYmd(p.postedAt) === today);
   const todayHabitStartCount = logs.filter((l) => toTokyoYmd(l.startedAt) === today).length;
@@ -49,10 +58,12 @@ export function DashboardPage() {
   function reloadHabits() {
     setHabits(getHabits());
     setLogs(getHabitStartLogs());
+    setIsReady(true);
   }
 
   function reloadPosts() {
     setPosts(getPosts());
+    setIsReady(true);
   }
 
   function handleReorder(orderedIds: string[]) {
@@ -94,6 +105,9 @@ export function DashboardPage() {
           <SummaryCard label="投稿" value={`${todayPosts.length} 件`} />
           <SummaryCard label="習慣開始" value={`${todayHabitStartCount} 回`} />
         </div>
+        {!isReady && (
+          <p className="mt-2 text-xs text-zinc-500">データを読み込み中...</p>
+        )}
       </section>
 
       {/* クイック入力 */}
