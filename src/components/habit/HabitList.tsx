@@ -26,9 +26,12 @@ export function HabitList({ habits, logs, onUpdate, onReorder, onDelete, onToggl
 
   // refs for stable access inside passive event listeners
   const habitsRef = useRef(habits);
-  habitsRef.current = habits;
   const onReorderRef = useRef(onReorder);
-  onReorderRef.current = onReorder;
+
+  useEffect(() => {
+    habitsRef.current = habits;
+    onReorderRef.current = onReorder;
+  }, [habits, onReorder]);
 
   useEffect(() => {
     const el = listRef.current;
