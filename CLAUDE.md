@@ -68,9 +68,9 @@
   - 将来導入時: `Next.js Route Handlers` + `PostgreSQL` + 認証（詳細は導入時に追記）
 
 ## 主なドキュメント
-- 要件定義: `/Users/sen-dev/Documents/codex/self-insight-app/docs/01_requirements.md`
-- 画面設計: `/Users/sen-dev/Documents/codex/self-insight-app/docs/02_screen_design.md`
-- DB設計: `/Users/sen-dev/Documents/codex/self-insight-app/docs/03_db_design.md`
+- 要件定義: `$HOME/self-insight-app/docs/01_requirements.md`
+- 画面設計: `$HOME/self-insight-app/docs/02_screen_design.md`
+- DB設計: `$HOME/self-insight-app/docs/03_db_design.md`
 
 ## 想定ディレクトリと責務
 - `self-insight-app/`（実装リポジトリのルート想定）
